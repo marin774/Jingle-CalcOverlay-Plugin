@@ -9,12 +9,12 @@ import xyz.duncanruns.jingle.util.ExceptionUtil;
 
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
+import java.net.ConnectException;
 import java.net.HttpURLConnection;
 import java.net.SocketTimeoutException;
 import java.net.URL;
 import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 import static me.marin.calcoverlay.CalcOverlay.log;
 
@@ -38,7 +38,7 @@ public class SSEClient {
                 log(Level.DEBUG, "Ping failed with response code: " + responseCode);
                 return false;
             }
-        } catch (SocketTimeoutException e) {
+        } catch (SocketTimeoutException | ConnectException e) {
             return false;
         } catch (Exception e) {
             log(Level.ERROR, "Error while trying to ping Ninjabrain Bot API:\n" + ExceptionUtil.toDetailedString(e));
