@@ -47,7 +47,7 @@ After you enabled the overlay, click "Open test overlay" in the Overlay Settings
 - **Move down** - moves the column 1 down
 
 
-
-
+## Known issue
+Ninjabrain Bot API sometimes fails to send an update if there's a lot of updates fast. For example, if you change your angle multiple times very fast, the overlay may not be up to date. I might try to fix this in a future update, but this is a Ninjabrain Bot issue.
 
 
