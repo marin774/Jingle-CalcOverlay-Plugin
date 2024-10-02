@@ -34,7 +34,6 @@ public class NinjabrainBotEventSubscriber {
     public void connect() {
         if (!isConnected && ping()) {
             subscribeToEvents();
-            log(Level.INFO, "Connected to api.");
         }
     }
     public void disconnect() {
@@ -43,7 +42,6 @@ public class NinjabrainBotEventSubscriber {
         }
         list.clear();
         isConnected = false;
-        log(Level.INFO, "Disconnected from api.");
     }
 
     private static final Gson GSON = new Gson();
@@ -68,13 +66,14 @@ public class NinjabrainBotEventSubscriber {
         String resultType = response.get("resultType").getAsString();
 
         switch (resultType) {
+            default:
             case "NONE":
             case "FAILED":
                 OverlayUtil.empty();
                 break;
-            case "BLIND":
-                handleBlind();
-                break;
+            // case "BLIND":
+            //     handleBlind();
+            //     break;
             case "TRIANGULATION":
                 JsonArray predictions = response.get("predictions").getAsJsonArray();
 
@@ -141,8 +140,6 @@ public class NinjabrainBotEventSubscriber {
             double probability = blindResult.get("highrollProbability").getAsDouble();
 
             OverlayUtil.homePortal(xNether, zNether, evaluation, probability);
-
-            log(Level.INFO, "Blind result: " + xNether + ", " + zNether);
         });
     }
 

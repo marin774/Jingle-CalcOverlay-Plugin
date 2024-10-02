@@ -39,8 +39,12 @@ public class ConfigGUI extends JPanel {
             CalcOverlaySettings.save();
 
             if (settings.calcOverlayEnabled) {
+                if (!NINJABRAIN_BOT_EVENT_SUBSCRIBER.ping()) {
+                    JOptionPane.showMessageDialog(null, "Couldn't connect to Ninjabrain Bot API. Make sure that Ninjabrain Bot is open, and API is enabled in it's settings.");
+                    return;
+                }
+
                 NINJABRAIN_BOT_EVENT_SUBSCRIBER.connect();
-                updateImage();
             } else {
                 OverlayUtil.empty();
                 NINJABRAIN_BOT_EVENT_SUBSCRIBER.disconnect();
@@ -53,7 +57,6 @@ public class ConfigGUI extends JPanel {
             CalcOverlaySettings.save();
             updateImage();
         });
-
 
         showCoordsBasedOnCheckBox.setSelected(settings.onlyShowCurrentDimensionCoords);
         showCoordsBasedOnCheckBox.addActionListener(a -> {
@@ -93,7 +96,6 @@ public class ConfigGUI extends JPanel {
     }
 
     private void updateImage() {
-        log(Level.INFO, "Update Image received");
         NINJABRAIN_BOT_EVENT_SUBSCRIBER.showDummyMeasurement();
     }
 

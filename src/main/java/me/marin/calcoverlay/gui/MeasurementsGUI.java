@@ -7,7 +7,6 @@ import me.marin.calcoverlay.util.OverlayUtil;
 import me.marin.calcoverlay.util.PlayerPosition;
 import me.marin.calcoverlay.util.Prediction;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.logging.log4j.Level;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,11 +19,10 @@ public class MeasurementsGUI {
     private JPanel mainPanel;
     private JPanel measurementsPanel;
 
-    private final GridBagConstraints gbc = new GridBagConstraints();
-
     public MeasurementsGUI(List<Pair<Prediction, AngleToCoords>> predictions, PlayerPosition playerPosition) {
         $$$setupUI$$$();
 
+        GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
         gbc.insets = new Insets(18, 18, 0, 18);
 

@@ -103,8 +103,6 @@ public class SSEClient {
                 BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
                 StringBuilder eventBuilder = new StringBuilder();
 
-                log(Level.INFO, "Now listening to " + endpoint + " events.");
-
                 String line;
 
                 while ((line = reader.readLine()) != null && enabled.get()) {
