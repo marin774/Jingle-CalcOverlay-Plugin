@@ -2,7 +2,7 @@ package me.marin.calcoverlay.gui;
 
 import me.marin.calcoverlay.io.CalcOverlaySettings;
 import me.marin.calcoverlay.util.OverlayUtil;
-import org.apache.logging.log4j.Level;
+import me.marin.calcoverlay.util.UpdateUtil;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -25,6 +25,7 @@ public class ConfigGUI extends JPanel {
     private JTextPane folderPathTextPane;
     private JButton copyFilePathButton;
     private JCheckBox showAngleDirectionCheckbox;
+    private JButton checkForUpdatesButton;
 
     public ConfigGUI() {
         CalcOverlaySettings settings = CalcOverlaySettings.getInstance();
@@ -32,6 +33,10 @@ public class ConfigGUI extends JPanel {
         add(mainPanel);
 
         updateGUI();
+
+        checkForUpdatesButton.addActionListener(a -> {
+            UpdateUtil.checkForUpdatesAndUpdate(false);
+        });
 
         enabledCheckbox.setSelected(settings.calcOverlayEnabled);
         enabledCheckbox.addActionListener(a -> {
@@ -101,7 +106,6 @@ public class ConfigGUI extends JPanel {
 
     public void updateGUI() {
         CalcOverlaySettings settings = CalcOverlaySettings.getInstance();
-
 
         columnsPanel.removeAll();
 
@@ -214,7 +218,7 @@ public class ConfigGUI extends JPanel {
         GridBagConstraints gbc;
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 0;
+        gbc.gridy = 1;
         gbc.anchor = GridBagConstraints.NORTH;
         gbc.insets = new Insets(0, 0, 5, 0);
         mainPanel.add(enabledCheckbox, gbc);
@@ -223,14 +227,14 @@ public class ConfigGUI extends JPanel {
         showCoordsBasedOnCheckBox.setToolTipText("<html>\nIf enabled, only overworld coords will be shown while you're in overworld,<br>and nether coords will be hidden.<br> Once you F3+C in the nether, only nether coords will be shown,<br>and overworld coords will be hidden.\n<br><br>\nIf disabled, both coords will always be shown.\n</html>");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.insets = new Insets(0, 0, 20, 0);
         mainPanel.add(showCoordsBasedOnCheckBox, gbc);
         final JPanel panel1 = new JPanel();
         panel1.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.fill = GridBagConstraints.BOTH;
         mainPanel.add(panel1, gbc);
         columnsPanel = new JPanel();
@@ -244,7 +248,7 @@ public class ConfigGUI extends JPanel {
         panel2.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 3;
+        gbc.gridy = 4;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 5, 0);
         mainPanel.add(panel2, gbc);
@@ -267,7 +271,7 @@ public class ConfigGUI extends JPanel {
         panel3.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 2;
+        gbc.gridy = 3;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 5, 0);
         mainPanel.add(panel3, gbc);
@@ -291,7 +295,7 @@ public class ConfigGUI extends JPanel {
         panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 1;
+        gbc.gridy = 2;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.insets = new Insets(0, 0, 30, 0);
         mainPanel.add(panel4, gbc);
@@ -326,9 +330,16 @@ public class ConfigGUI extends JPanel {
         showAngleDirectionCheckbox.setText("Show angle direction");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 4;
+        gbc.gridy = 5;
         gbc.insets = new Insets(0, 0, 5, 0);
         mainPanel.add(showAngleDirectionCheckbox, gbc);
+        checkForUpdatesButton = new JButton();
+        checkForUpdatesButton.setText("Check for updates");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.insets = new Insets(0, 0, 5, 0);
+        mainPanel.add(checkForUpdatesButton, gbc);
     }
 
     /**

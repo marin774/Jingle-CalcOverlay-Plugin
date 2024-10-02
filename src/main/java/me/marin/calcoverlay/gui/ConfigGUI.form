@@ -11,7 +11,7 @@
     <children>
       <component id="badea" class="javax.swing.JCheckBox" binding="enabledCheckbox">
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -20,7 +20,7 @@
       </component>
       <component id="818d3" class="javax.swing.JCheckBox" binding="showCoordsBasedOnCheckBox" default-binding="true">
         <constraints>
-          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="0" bottom="20" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
@@ -30,7 +30,7 @@
       </component>
       <grid id="bcac3" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="7" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
@@ -49,7 +49,7 @@
       </grid>
       <grid id="ac261" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
@@ -75,7 +75,7 @@
       </grid>
       <grid id="4334e" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
@@ -102,7 +102,7 @@
       </grid>
       <grid id="7239" layout-manager="GridBagLayout">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="0" bottom="30" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties/>
@@ -146,11 +146,20 @@
       </grid>
       <component id="8afdb" class="javax.swing.JCheckBox" binding="showAngleDirectionCheckbox">
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
           <gridbag top="0" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
         </constraints>
         <properties>
           <text value="Show angle direction"/>
+        </properties>
+      </component>
+      <component id="b5728" class="javax.swing.JButton" binding="checkForUpdatesButton">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="Check for updates"/>
         </properties>
       </component>
     </children>

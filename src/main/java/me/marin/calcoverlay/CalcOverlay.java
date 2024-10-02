@@ -5,6 +5,8 @@ import me.marin.calcoverlay.gui.ConfigGUI;
 import me.marin.calcoverlay.io.CalcOverlaySettings;
 import me.marin.calcoverlay.ninjabrainapi.NinjabrainBotEventSubscriber;
 import me.marin.calcoverlay.util.OverlayUtil;
+import me.marin.calcoverlay.util.UpdateUtil;
+import me.marin.calcoverlay.util.VersionUtil;
 import org.apache.logging.log4j.Level;
 import xyz.duncanruns.jingle.Jingle;
 import xyz.duncanruns.jingle.JingleAppLaunch;
@@ -56,6 +58,9 @@ public class CalcOverlay {
         if (CalcOverlaySettings.getInstance().calcOverlayEnabled) {
             NINJABRAIN_BOT_EVENT_SUBSCRIBER.connect();
         }
+
+        VersionUtil.deleteOldVersionJars();
+        UpdateUtil.checkForUpdatesAndUpdate(true);
 
         CONFIG_GUI = new ConfigGUI();
         JingleGUI.addPluginTab("Calc Overlay", CONFIG_GUI);
