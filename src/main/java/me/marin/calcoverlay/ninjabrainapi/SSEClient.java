@@ -29,7 +29,7 @@ public class SSEClient {
             URL url = new URL(baseURL + "/ping");
             HttpURLConnection connection = (HttpURLConnection) url.openConnection();
             connection.setRequestMethod("GET");
-            connection.setConnectTimeout(1000);
+            connection.setConnectTimeout(500);
 
             int responseCode = connection.getResponseCode();
             if (responseCode == 200) {
@@ -46,40 +46,42 @@ public class SSEClient {
         }
     }
 
-    public void get(String endpoint, Consumer<JsonObject> dataConsumer) {
-        CalcOverlayUtil.runAsync(endpoint + "-endpoint", () -> {
-            try {
-                URL url = new URL(baseURL + "/" + endpoint);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setRequestMethod("GET");
+    /**
+     * Runs in the same thread
+     */
+    public JsonObject get(String endpoint) {
+        try {
+            URL url = new URL(baseURL + "/" + endpoint);
+            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+            connection.setRequestMethod("GET");
 
-                int responseCode = connection.getResponseCode();
-                if (responseCode != 200) {
-                    log(Level.WARN, "Failed to get " + endpoint + " endpoint, response code: " + responseCode + ".");
-                    return;
-                }
-
-                BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
-                String line;
-                StringBuilder response = new StringBuilder();
-
-                while ((line = reader.readLine()) != null) {
-                    response.append(line);
-                }
-                reader.close();
-
-                String responseString = response.toString().trim();
-
-                try {
-                    dataConsumer.accept(gson.fromJson(responseString, JsonObject.class));
-                } catch (Exception e) {
-                    log(Level.ERROR, "Consumer error while getting " + endpoint + " endpoint:\n" + ExceptionUtil.toDetailedString(e));
-                }
-
-            } catch (Exception e) {
-
+            int responseCode = connection.getResponseCode();
+            if (responseCode != 200) {
+                log(Level.WARN, "Failed to get " + endpoint + " endpoint, response code: " + responseCode + ".");
+                return null;
             }
-        });
+
+            BufferedReader reader = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+            String line;
+            StringBuilder response = new StringBuilder();
+
+            while ((line = reader.readLine()) != null) {
+                response.append(line);
+            }
+            reader.close();
+
+            String responseString = response.toString().trim();
+
+            try {
+                return gson.fromJson(responseString, JsonObject.class);
+            } catch (Exception e) {
+                log(Level.ERROR, "Error while getting " + endpoint + " endpoint:\n" + ExceptionUtil.toDetailedString(e));
+            }
+
+        } catch (Exception e) {
+            log(Level.ERROR, "Error while getting " + endpoint + " endpoint:\n" + ExceptionUtil.toDetailedString(e));
+        }
+        return null;
     }
 
     /**
@@ -128,7 +130,7 @@ public class SSEClient {
         return enabled;
     }
 
-    public void keepRequestingWithDelay(String endpoint, int delayMs, Consumer<JsonObject> eventDataConsumer) {
+    /*public void keepRequestingWithDelay(String endpoint, int delayMs, Consumer<JsonObject> eventDataConsumer) {
         CalcOverlayUtil.runAsync(endpoint + "-events", () -> {
             try {
                 while (true) {
@@ -139,6 +141,6 @@ public class SSEClient {
                 log(Level.ERROR, "Error while listening on " + endpoint + " endpoint:\n" + ExceptionUtil.toDetailedString(e));
             }
         });
-    }
+    }*/
 
 }

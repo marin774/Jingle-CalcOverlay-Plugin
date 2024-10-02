@@ -19,7 +19,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.charset.Charset;
-import java.nio.file.Files;
 import java.nio.file.Path;
 
 import static me.marin.calcoverlay.util.VersionUtil.CURRENT_VERSION;
@@ -55,9 +54,7 @@ public class CalcOverlay {
 
         CalcOverlaySettings.load();
 
-        if (CalcOverlaySettings.getInstance().calcOverlayEnabled) {
-            NINJABRAIN_BOT_EVENT_SUBSCRIBER.connect();
-        }
+        NINJABRAIN_BOT_EVENT_SUBSCRIBER.startConnectJob();
 
         VersionUtil.deleteOldVersionJars();
         UpdateUtil.checkForUpdatesAndUpdate(true);

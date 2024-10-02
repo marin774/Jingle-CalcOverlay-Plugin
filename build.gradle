@@ -52,7 +52,6 @@ shadowJar {
 }
 
 processResources {
-    // Totally stolen from Fabric
     inputs.property "version", project.version
 
     filesMatching("jingle.plugin.json") {

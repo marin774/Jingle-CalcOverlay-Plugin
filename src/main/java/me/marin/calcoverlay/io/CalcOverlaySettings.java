@@ -51,6 +51,9 @@ public class CalcOverlaySettings {
     @SerializedName("overworld coords")
     public OverworldsCoords overworldCoords;
 
+    @SerializedName("shown measurements")
+    public int shownMeasurements;
+
     public static void load() {
         if (!Files.exists(SETTINGS_PATH)) {
             loadDefaultSettings();
@@ -89,6 +92,7 @@ public class CalcOverlaySettings {
         instance.showAngleDirection = true;
         instance.onlyShowCurrentDimensionCoords = false;
         instance.overworldCoords = OverworldsCoords.CHUNK;
+        instance.shownMeasurements = 3;
     }
 
     @AllArgsConstructor @Getter

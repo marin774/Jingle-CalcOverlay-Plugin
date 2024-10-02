@@ -41,10 +41,9 @@ public class MeasurementsGUI {
 
         gbc.gridy = 1;
         final int vGap = 12;
-        final int hGap = 30;
+        final int hGap = 22;
         for (Pair<Prediction, AngleToCoords> pair : predictions) {
-            if (gbc.gridy > 3) {
-                // only show the first 3 results
+            if (gbc.gridy > CalcOverlaySettings.getInstance().shownMeasurements) {
                 break;
             }
 
@@ -98,13 +97,16 @@ public class MeasurementsGUI {
                         case ANGLE:
                             JPanel anglePanel = new JPanel();
                             BorderLayout layout = new BorderLayout();
-                            layout.setHgap(hGap);
+                            layout.setHgap(12);
                             anglePanel.setLayout(layout);
 
                             JLabel angleLabel = setupJLabel(String.format(Locale.US, "%.2f", angleToCoords.getActualAngle()));
                             anglePanel.add(angleLabel, BorderLayout.CENTER);
 
-                            if (CalcOverlaySettings.getInstance().showAngleDirection) {
+                            if (displayedDistance == 0) {
+                                angleLabel.setText("-HERE-");
+                                angleLabel.setForeground(OverlayUtil.COLOR_GRADIENT_100);
+                            } else if (CalcOverlaySettings.getInstance().showAngleDirection) {
                                 double correction = angleToCoords.getNeededAngleCorrection();
                                 Color correctionColor = OverlayUtil.getColor(1 - Math.abs(correction) / 180);
                                 JLabel angleAdjustmentLabel = setupJLabel(String.format(Locale.US, "(%s%.1f)",
@@ -115,9 +117,7 @@ public class MeasurementsGUI {
                                 anglePanel.add(angleAdjustmentLabel, BorderLayout.EAST);
                             }
 
-                            if (displayedDistance == 0) {
-                                anglePanel.setVisible(false);
-                            }
+
                             gbc.insets = new Insets(gbc.gridy == 1 ? vGap : 0, 0, vGap, hGap);
                             gbc.anchor = GridBagConstraints.CENTER;
                             measurementsPanel.add(anglePanel, gbc);
