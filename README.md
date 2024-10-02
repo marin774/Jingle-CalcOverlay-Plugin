@@ -22,16 +22,22 @@ Once you've installed the plugin and restarted Jingle, enable the plugin and con
 1. Open the "Plugins" tab in Jingle.
 2. Click on "Open Config" next to Calc Overlay.
 3. Enable overlay by clicking on the "Enable overlay" checkbox.
+4. Add an Image Source to your OBS with the provided path (click "Copy File Path" to copy the image file path to your clipboard).
 
-## Settings
-**To make configuring easier, I highly recommend you add the overlay image to OBS first.** Click "Copy Image Path" and paste it in an Image Source in OBS.
+## Configuration
+After you enabled the overlay, click "Open test overlay" in the Overlay Settings section. This will open a new window which displays a dummy measurement. You can use this window to instantly see how your overlay might look like in OBS. 
 
-After you edit a setting, a dummy measurement will be shown on the overlay so you can see your settings. After you are done, disable and enable the overlay.
+![image](https://github.com/user-attachments/assets/e6e67be4-dabf-48d2-b0a5-ecc728484adc)
+
+### Buttons
+- **Open test overlay** - opens the overlay for testing different settings, described above
+- **Update OBS overlay** - if you have an active measurement in Ninjabrain Bot, use this button to update the overlay image (you don't have to click it, settings are saved as you edit them)
 
 ### General settings
+- **Shown measurements** - number of displayed rows for measurements, between 1 and 5
 - **Overlay position** - positions the overlay within the image (image is always the same size, so this setting will anchor it to a corner)
 - **Overworld coords** - same as the Ninjabrain Bot setting
-- **Show angle direction** - whether to show what direction you need to go next to Angle
+- **Show angle direction** - whether to show what direction you need to go (shown next to Angle)
 - **Show coords based on dimension** - displays ONLY overworld or nether coords, depending on the last dimension you F3+C'd in
 
 ### Column settings
@@ -39,8 +45,6 @@ After you edit a setting, a dummy measurement will be shown on the overlay so yo
 - **Show icon** - if the column is visible, whether to show the icon above the column or not
 - **Move up** - moves the column 1 up
 - **Move down** - moves the column 1 down
-
-![image](https://github.com/user-attachments/assets/9c2ae569-4b25-461a-8eb4-daa48070197c)
 
 
 
