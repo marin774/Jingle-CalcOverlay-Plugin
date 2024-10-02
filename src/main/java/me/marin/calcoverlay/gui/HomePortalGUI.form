@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="me.marin.calcoverlay.gui.HomePortalGUI">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridBagLayout">
+    <constraints>
+      <xy x="20" y="20" width="773" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="empty">
+      <size top="36" left="36" bottom="36" right="36"/>
+    </border>
+    <children>
+      <component id="83a0d" class="javax.swing.JLabel" binding="coordsLabel">
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="36" bottom="0" right="36" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <font name="Dialog" size="68" style="1"/>
+          <text value="&lt;coords&gt;"/>
+        </properties>
+      </component>
+      <component id="7e1c5" class="javax.swing.JLabel" binding="probabilityLabel">
+        <constraints>
+          <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <font name="Dialog" size="68" style="1"/>
+          <text value="&lt;10.0%&gt;"/>
+        </properties>
+      </component>
+      <component id="7ec8a" class="javax.swing.JLabel" binding="homePortalIcon" custom-create="true">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <preferredSize width="96" height="96"/>
+          <text value="&lt;image&gt;"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>

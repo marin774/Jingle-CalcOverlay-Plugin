@@ -1,0 +1,6 @@
+{
+  "name": "Jingle Calc Overlay Plugin",
+  "id": "calc-overlay-plugin",
+  "version": "${version}",
+  "initializer": "me.marin.calcoverlay.CalcOverlay::initialize"
+}

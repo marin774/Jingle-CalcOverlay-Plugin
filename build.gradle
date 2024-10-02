@@ -1,0 +1,67 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        gradlePluginPortal()
+    }
+    dependencies {
+        classpath "gradle.plugin.com.github.johnrengelman:shadow:7.1.2"
+    }
+}
+
+plugins {
+    id 'java'
+    id 'com.github.johnrengelman.shadow' version '7.1.2'
+}
+
+configurations {
+    provided
+    compile.extendsFrom provided
+}
+
+group = project.maven_group
+version = project.plugin_version
+archivesBaseName = project.archives_base_name
+
+sourceCompatibility = JavaVersion.VERSION_1_8
+targetCompatibility = JavaVersion.VERSION_1_8
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+    maven { url "https://www.jetbrains.com/intellij-repository/releases" }
+}
+
+compileJava {
+    options.compilerArgs << '-parameters'
+}
+
+dependencies {
+    // Choose Jingle version: https://jitpack.io/#DuncanRuns/Jingle/
+    implementation 'com.github.DuncanRuns:Jingle:v1.0.0'
+
+    // lombok
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    // Jgoodies (GUI)
+    shadow group: 'com.jgoodies', name: 'jgoodies-forms', version: '1.9.0'
+}
+
+shadowJar {
+    configurations = [project.configurations.shadow]
+}
+
+processResources {
+    // Totally stolen from Fabric
+    inputs.property "version", project.version
+
+    filesMatching("jingle.plugin.json") {
+        expand "version": project.version
+    }
+}
+
+var jinglePluginsFolderPath = "${System.getProperty('user.home')}/.config/Jingle/plugins"
+task copyJar(type: Copy) {
+    from shadowJar
+    into jinglePluginsFolderPath
+}

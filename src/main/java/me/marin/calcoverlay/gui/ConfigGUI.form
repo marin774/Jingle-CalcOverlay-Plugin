@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="me.marin.calcoverlay.gui.ConfigGUI">
+  <grid id="27dc6" binding="mainPanel" layout-manager="GridBagLayout">
+    <constraints>
+      <xy x="20" y="20" width="500" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="empty">
+      <size top="5" left="5" bottom="5" right="5"/>
+    </border>
+    <children>
+      <component id="badea" class="javax.swing.JCheckBox" binding="enabledCheckbox">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="1" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="Enable overlay"/>
+        </properties>
+      </component>
+      <component id="818d3" class="javax.swing.JCheckBox" binding="showCoordsBasedOnCheckBox" default-binding="true">
+        <constraints>
+          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="0" bottom="20" right="0" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="Show coords based on dimension"/>
+          <toolTipText value="&lt;html&gt;&#10;If enabled, only overworld coords will be shown while you're in overworld,&lt;br&gt;and nether coords will be hidden.&lt;br&gt; Once you F3+C in the nether, only nether coords will be shown,&lt;br&gt;and overworld coords will be hidden.&#10;&lt;br&gt;&lt;br&gt;&#10;If disabled, both coords will always be shown.&#10;&lt;/html&gt;" noi18n="true"/>
+        </properties>
+      </component>
+      <grid id="bcac3" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="6225a" binding="columnsPanel" layout-manager="GridBagLayout">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children/>
+          </grid>
+        </children>
+      </grid>
+      <grid id="ac261" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="db351" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag top="0" left="0" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Overworld coords:"/>
+            </properties>
+          </component>
+          <component id="5306" class="javax.swing.JComboBox" binding="overworldCoordsTypeCombobox">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+          </component>
+        </children>
+      </grid>
+      <grid id="4334e" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="b43dc" class="javax.swing.JComboBox" binding="overlayPositionCombobox">
+            <constraints>
+              <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="2" anchor="8" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties/>
+          </component>
+          <component id="84c75" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag top="0" left="0" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Overlay position:"/>
+              <toolTipText value="&lt;html&gt;Overlay position in the image. Image is always the same size,&lt;br&gt;and this setting lets you choose which corner overlay anchors to.&lt;/html&gt;"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="7239" layout-manager="GridBagLayout">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="0" bottom="30" right="0" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="ea8b" class="javax.swing.JLabel">
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="OBS Overlay file:"/>
+            </properties>
+          </component>
+          <component id="42361" class="javax.swing.JTextPane" binding="folderPathTextPane">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="6" anchor="0" fill="3" indent="0" use-parent-layout="false">
+                <preferred-size width="150" height="50"/>
+              </grid>
+              <gridbag top="0" left="0" bottom="0" right="5" weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <alignmentX value="0.0"/>
+              <editable value="false"/>
+              <maximumSize width="200" height="2147483647"/>
+              <minimumSize width="200" height="22"/>
+              <preferredSize width="200" height="22"/>
+              <text value="folder path"/>
+            </properties>
+          </component>
+          <component id="9433c" class="javax.swing.JButton" binding="copyFilePathButton">
+            <constraints>
+              <grid row="1" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <gridbag weightx="0.0" weighty="0.0"/>
+            </constraints>
+            <properties>
+              <text value="Copy Image Path"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <component id="8afdb" class="javax.swing.JCheckBox" binding="showAngleDirectionCheckbox">
+        <constraints>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+          <gridbag top="0" left="0" bottom="5" right="0" weightx="0.0" weighty="0.0"/>
+        </constraints>
+        <properties>
+          <text value="Show angle direction"/>
+        </properties>
+      </component>
+    </children>
+  </grid>
+</form>
