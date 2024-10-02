@@ -14,14 +14,12 @@ import xyz.duncanruns.jingle.gui.JingleGUI;
 import xyz.duncanruns.jingle.plugin.PluginManager;
 import xyz.duncanruns.jingle.util.ExceptionUtil;
 
-import javax.imageio.ImageIO;
-import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
 
 import static me.marin.calcoverlay.util.VersionUtil.CURRENT_VERSION;
+import static me.marin.calcoverlay.util.VersionUtil.version;
 
 public class CalcOverlay {
 
@@ -53,6 +51,10 @@ public class CalcOverlay {
         createOverlayFile();
 
         CalcOverlaySettings.load();
+        VersionUtil.Version version = version(CalcOverlaySettings.getInstance().version);
+        if (version.isOlderThan(CURRENT_VERSION)) {
+            updateFrom(version);
+        }
 
         NINJABRAIN_BOT_EVENT_SUBSCRIBER.startConnectJob();
 
@@ -63,16 +65,21 @@ public class CalcOverlay {
         JingleGUI.addPluginTab("Calc Overlay", CONFIG_GUI);
     }
 
+    public static void updateFrom(VersionUtil.Version version) {
+        log(Level.INFO, "Updating data from version " + version + ".");
+        if (version.isOlderThan(version("1.1.0"))) {
+            CalcOverlaySettings.getInstance().shownMeasurements = 3;
+            log(Level.INFO, "[1.1.0] 'shown measurements' set to 3");
+        }
+
+        CalcOverlaySettings.getInstance().version = CURRENT_VERSION.toString();
+        CalcOverlaySettings.save();
+        log(Level.INFO, "Updated data to v" + CURRENT_VERSION);
+    }
+
     private static void createOverlayFile() {
         try {
-            BufferedImage image = new BufferedImage(1250, 400, BufferedImage.TYPE_INT_ARGB);
-            Graphics g = image.createGraphics();
-            g.drawRect(0, 0, 1250, 400);
-            try {
-                ImageIO.write(image, "png", CalcOverlay.OVERLAY_PATH.toFile());
-            } catch (Exception e) {
-                log(Level.ERROR, "Error while writing overlay file:\n" + ExceptionUtil.toDetailedString(e));
-            }
+            OverlayUtil.writeImage(OverlayUtil.empty());
         } catch (Exception e) {
             log(Level.INFO, "Failed to create overlay image:\n" + ExceptionUtil.toDetailedString(e));
         }

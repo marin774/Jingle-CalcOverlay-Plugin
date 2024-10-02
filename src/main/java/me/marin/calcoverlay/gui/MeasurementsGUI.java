@@ -24,9 +24,10 @@ public class MeasurementsGUI {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
-        gbc.insets = new Insets(18, 18, 0, 18);
+        gbc.insets = new Insets(18, 18, 10, 18);
 
         gbc.gridx = 0;
+        // Icons
         for (CalcOverlaySettings.ColumnData columnData : CalcOverlaySettings.getInstance().columnData) {
             if (columnData.shouldShow(playerPosition.isInNether())) {
                 if (columnData.isShowIcon()) {
@@ -40,8 +41,8 @@ public class MeasurementsGUI {
         }
 
         gbc.gridy = 1;
-        final int vGap = 12;
-        final int hGap = 22;
+        final int vGap = 5;
+        final int hGap = 20;
         for (Pair<Prediction, AngleToCoords> pair : predictions) {
             if (gbc.gridy > CalcOverlaySettings.getInstance().shownMeasurements) {
                 break;

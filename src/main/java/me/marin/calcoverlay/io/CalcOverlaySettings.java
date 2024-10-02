@@ -52,7 +52,7 @@ public class CalcOverlaySettings {
     public OverworldsCoords overworldCoords;
 
     @SerializedName("shown measurements")
-    public int shownMeasurements;
+    public int shownMeasurements = -1;
 
     public static void load() {
         if (!Files.exists(SETTINGS_PATH)) {

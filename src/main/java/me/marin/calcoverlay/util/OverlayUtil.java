@@ -77,11 +77,14 @@ public class OverlayUtil {
         }
     }
 
+    private final static int IMAGE_WIDTH = 1250;
+    private final static int IMAGE_HEIGHT = 550;
+
     public static JPanel getFinalOverlayPanel(JPanel panel) {
         JPanel wrapper = new JPanel();
         wrapper.setLayout(new BorderLayout());
-        wrapper.setPreferredSize(new Dimension(1250, 400));
-        wrapper.setSize(1250, 400);
+        wrapper.setPreferredSize(new Dimension(IMAGE_WIDTH, IMAGE_HEIGHT));
+        wrapper.setSize(IMAGE_WIDTH, IMAGE_HEIGHT);
 
         if (panel != null) {
             JPanel verticalWrapper = new JPanel();

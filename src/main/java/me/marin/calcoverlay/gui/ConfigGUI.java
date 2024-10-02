@@ -58,6 +58,7 @@ public class ConfigGUI extends JPanel {
         enabledCheckbox.addActionListener(a -> {
             if (!settings.calcOverlayEnabled) {
                 if (!NINJABRAIN_BOT_EVENT_SUBSCRIBER.ping()) {
+                    enabledCheckbox.setSelected(false);
                     JOptionPane.showMessageDialog(null, "Couldn't connect to Ninjabrain Bot API. Make sure that Ninjabrain Bot is open, and API is enabled in its settings.");
                     return;
                 }
@@ -415,14 +416,6 @@ public class ConfigGUI extends JPanel {
         gbc.gridy = 0;
         gbc.fill = GridBagConstraints.BOTH;
         panel4.add(columnsPanel, gbc);
-        showDummyMeasurementButton = new JButton();
-        showDummyMeasurementButton.setText("Open test overlay (updates live)");
-        gbc = new GridBagConstraints();
-        gbc.gridx = 0;
-        gbc.gridy = 1;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(0, 0, 7, 0);
-        enabledPanel.add(showDummyMeasurementButton, gbc);
         final JPanel panel5 = new JPanel();
         panel5.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
@@ -438,7 +431,6 @@ public class ConfigGUI extends JPanel {
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.fill = GridBagConstraints.HORIZONTAL;
-        gbc.insets = new Insets(0, 0, 5, 0);
         panel5.add(shownMeasurementsSpinner, gbc);
         final JLabel label5 = new JLabel();
         label5.setText("Shown measurements:");
@@ -446,7 +438,33 @@ public class ConfigGUI extends JPanel {
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 0, 5);
         panel5.add(label5, gbc);
+        final JPanel panel6 = new JPanel();
+        panel6.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 1;
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.insets = new Insets(0, 0, 0, 5);
+        enabledPanel.add(panel6, gbc);
+        panel6.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 7, 0), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        showDummyMeasurementButton = new JButton();
+        showDummyMeasurementButton.setLabel("Open test overlay");
+        showDummyMeasurementButton.setText("Open test overlay");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 0, 0, 5);
+        panel6.add(showDummyMeasurementButton, gbc);
+        updateOBSOverlayButton = new JButton();
+        updateOBSOverlayButton.setText("Update OBS overlay");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 1;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        panel6.add(updateOBSOverlayButton, gbc);
         final JSeparator separator1 = new JSeparator();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;

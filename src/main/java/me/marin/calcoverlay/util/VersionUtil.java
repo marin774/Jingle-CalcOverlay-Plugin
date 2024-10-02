@@ -42,7 +42,7 @@ public class VersionUtil {
 
         plugins.forEach(pair -> {
             PluginManager.JinglePluginData data = pair.getRight();
-            if (!data.id.equals("jingle-calc-overlay-plugin")) {
+            if (!data.id.equals("calc-overlay-plugin")) {
                 return;
             }
 

@@ -38,6 +38,7 @@ public class NinjabrainBotEventSubscriber {
             }
             if (ping()) {
                 subscribeToEvents();
+                isConnected.set(true);
                 log(Level.INFO, "Connected to Ninjabrain Bot API.");
             }
         }, 500);
@@ -47,6 +48,7 @@ public class NinjabrainBotEventSubscriber {
             atomicBoolean.set(false);
         }
         list.clear();
+        isConnected.set(false);
         log(Level.INFO, "Disconnected from Ninjabrain Bot API.");
     }
 
@@ -60,8 +62,6 @@ public class NinjabrainBotEventSubscriber {
             OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(response));
         }));
         //sseClient.keepRequestingWithDelay("stronghold", 5000, this::getPanelForStronghold); // if you change angles too fast, ninb api will miss an update...
-
-        isConnected.set(true);
     }
 
 }
