@@ -34,7 +34,7 @@ public class VersionUtil {
         try {
             plugins = PluginManager.getFolderPlugins();
         } catch (IOException e) {
-            log(Level.ERROR, "(WorldBopper) Failed to load plugins from folder:\n" + ExceptionUtil.toDetailedString(e));
+            log(Level.ERROR, "Failed to load plugins from folder:\n" + ExceptionUtil.toDetailedString(e));
         }
 
         // Mod ID -> path and data

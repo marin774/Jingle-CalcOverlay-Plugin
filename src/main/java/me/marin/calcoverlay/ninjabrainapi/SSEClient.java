@@ -8,6 +8,7 @@ import org.apache.logging.log4j.Level;
 import xyz.duncanruns.jingle.util.ExceptionUtil;
 
 import java.io.BufferedReader;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.ConnectException;
 import java.net.HttpURLConnection;
@@ -87,7 +88,7 @@ public class SSEClient {
     /**
      * @return AtomicBoolean, set to false to disconnect
      */
-    public AtomicBoolean subscribe(String endpoint, Consumer<JsonObject> eventDataConsumer) {
+    public AtomicBoolean subscribe(String endpoint, Consumer<JsonObject> eventDataConsumer, Runnable onDisconnect) {
         AtomicBoolean enabled = new AtomicBoolean(true);
         CalcOverlayUtil.runAsync(endpoint + "-events", () -> {
             try {
@@ -113,18 +114,24 @@ public class SSEClient {
                     } else if (line.isEmpty()) {
                         String eventString = eventBuilder.toString().trim();
 
-                        try {
-                            eventDataConsumer.accept(gson.fromJson(eventString, JsonObject.class));
-                        } catch (Exception e) {
-                            log(Level.ERROR, "Consumer error on " + endpoint + " event endpoint:\n" + ExceptionUtil.toDetailedString(e));
-                        }
+                        CalcOverlayUtil.runAsync(endpoint+"-events-consumer", () -> {
+                            try {
+                                eventDataConsumer.accept(gson.fromJson(eventString, JsonObject.class));
+                            } catch (Exception e) {
+                                log(Level.ERROR, "Consumer error on " + endpoint + " event endpoint:\n" + ExceptionUtil.toDetailedString(e));
+                            }
+                        });
 
                         eventBuilder.setLength(0);
                     }
                 }
 
             } catch (Exception e) {
-                log(Level.ERROR, "Error while listening on " + endpoint + " endpoint:\n" + ExceptionUtil.toDetailedString(e));
+                boolean closedNinjabrainBot = e instanceof IOException && e.getMessage().equals("Premature EOF");
+                if (!closedNinjabrainBot) {
+                    log(Level.ERROR, "Error while listening on " + endpoint + " endpoint:\n" + ExceptionUtil.toDetailedString(e));
+                }
+                onDisconnect.run();
             }
         });
         return enabled;

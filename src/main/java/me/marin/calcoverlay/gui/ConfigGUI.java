@@ -63,7 +63,6 @@ public class ConfigGUI extends JPanel {
                     return;
                 }
             } else {
-                OverlayUtil.writeImage(OverlayUtil.empty());
                 if (testFrame.isVisible()) {
                     testFrame.setVisible(false);
                 }

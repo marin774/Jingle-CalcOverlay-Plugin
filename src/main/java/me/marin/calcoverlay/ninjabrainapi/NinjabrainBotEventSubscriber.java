@@ -1,6 +1,7 @@
 package me.marin.calcoverlay.ninjabrainapi;
 
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
 import lombok.Getter;
 import me.marin.calcoverlay.io.CalcOverlaySettings;
@@ -44,24 +45,31 @@ public class NinjabrainBotEventSubscriber {
         }, 500);
     }
     public void disconnect() {
+        if (list.isEmpty()) {
+            return;
+        }
         for (AtomicBoolean atomicBoolean : list) {
             atomicBoolean.set(false);
         }
         list.clear();
         isConnected.set(false);
+        OverlayUtil.writeImage(OverlayUtil.empty());
         log(Level.INFO, "Disconnected from Ninjabrain Bot API.");
     }
 
     public static final Gson GSON = new Gson();
+    private static final Object LOCK = new Object();
     @Getter
     private JsonObject latestResponse;
 
     public void subscribeToEvents() {
+        Debouncer debouncer = new Debouncer(600);
         list.add(sseClient.subscribe("stronghold", response -> {
-            latestResponse = response;
-            OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(response));
-        }));
-        //sseClient.keepRequestingWithDelay("stronghold", 5000, this::getPanelForStronghold); // if you change angles too fast, ninb api will miss an update...
+            synchronized (LOCK) {
+                latestResponse = response;
+                debouncer.runTask(() -> OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(latestResponse)));
+            }
+        }, this::disconnect));
     }
 
 }
