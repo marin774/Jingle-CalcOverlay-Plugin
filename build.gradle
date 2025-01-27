@@ -47,7 +47,7 @@ dependencies {
     shadow group: 'com.jgoodies', name: 'jgoodies-forms', version: '1.9.0'
 
     // FontChooser
-    implementation "org.drjekyll:fontchooser:2.4"
+    shadow "org.drjekyll:fontchooser:2.4"
 }
 
 shadowJar {
