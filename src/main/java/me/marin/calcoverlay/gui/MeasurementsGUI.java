@@ -2,10 +2,7 @@ package me.marin.calcoverlay.gui;
 
 import lombok.Getter;
 import me.marin.calcoverlay.io.CalcOverlaySettings;
-import me.marin.calcoverlay.util.AngleToCoords;
-import me.marin.calcoverlay.util.OverlayUtil;
-import me.marin.calcoverlay.util.PlayerPosition;
-import me.marin.calcoverlay.util.Prediction;
+import me.marin.calcoverlay.util.*;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.swing.*;
@@ -134,7 +131,7 @@ public class MeasurementsGUI {
     private JLabel setupJLabel(String text) {
         JLabel jLabel = new JLabel();
         jLabel.setText(text);
-        jLabel.setFont(new Font("Calibri", Font.PLAIN, 48));
+        jLabel.setFont(CalcOverlayUtil.getFont());
         jLabel.setForeground(Color.WHITE);
         return jLabel;
     }

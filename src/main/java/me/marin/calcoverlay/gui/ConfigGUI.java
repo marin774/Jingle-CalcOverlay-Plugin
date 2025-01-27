@@ -2,8 +2,13 @@ package me.marin.calcoverlay.gui;
 
 import com.google.gson.JsonObject;
 import me.marin.calcoverlay.io.CalcOverlaySettings;
+import me.marin.calcoverlay.util.CalcOverlayUtil;
 import me.marin.calcoverlay.util.OverlayUtil;
 import me.marin.calcoverlay.util.UpdateUtil;
+import org.apache.logging.log4j.Level;
+import org.drjekyll.fontchooser.FontDialog;
+import xyz.duncanruns.jingle.gui.JingleGUI;
+import xyz.duncanruns.jingle.util.ExceptionUtil;
 
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
@@ -34,7 +39,8 @@ public class ConfigGUI extends JPanel {
     private JPanel enabledPanel;
     private JButton showDummyMeasurementButton;
     private JSpinner shownMeasurementsSpinner;
-    private JButton updateOBSOverlayButton;
+    private JLabel fontLabel;
+    private JButton changeFontButton;
 
     private JFrame testFrame;
     private JPanel testPanel;
@@ -139,11 +145,24 @@ public class ConfigGUI extends JPanel {
             updateTestGUI();
         });
 
-        updateOBSOverlayButton.addActionListener(a -> {
-            if (NINJABRAIN_BOT_EVENT_SUBSCRIBER.getLatestResponse() != null) {
-                OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(NINJABRAIN_BOT_EVENT_SUBSCRIBER.getLatestResponse()));
+        changeFontButton.addActionListener(a -> {
+            try {
+                FontDialog dialog = new FontDialog(JingleGUI.get(), "CalcOverlay Font Chooser", true);
+                dialog.setSelectedFont(CalcOverlayUtil.getFont());
+                dialog.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+                dialog.setVisible(true);
+                if (!dialog.isCancelSelected()) {
+                    Font font = dialog.getSelectedFont();
+                    settings.fontData = new CalcOverlaySettings.FontData(font.getName(), font.getStyle(), font.getSize());
+                    CalcOverlaySettings.save();
+                    updateTestGUI();
+                    updateGUI();
+                }
+            } catch (Exception e) {
+                log(Level.ERROR, "Exception while choosing font:\n" + ExceptionUtil.toDetailedString(e));
             }
         });
+
     }
 
     private void updateTestGUI() {
@@ -160,6 +179,10 @@ public class ConfigGUI extends JPanel {
 
     public void updateGUI() {
         CalcOverlaySettings settings = CalcOverlaySettings.getInstance();
+
+        Font font = CalcOverlayUtil.getFont();
+        String style = font.isPlain() ? "Plain, " : ((font.isBold() ? "Bold, " : "") + (font.isItalic() ? "Italic, " : ""));
+        fontLabel.setText(font.getFamily() + ", " + style + font.getSize() + "pt");
 
         columnsPanel.removeAll();
 
@@ -388,7 +411,7 @@ public class ConfigGUI extends JPanel {
         showAngleDirectionCheckbox.setText("Show angle direction");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 5;
+        gbc.gridy = 6;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 0, 5, 0);
         enabledPanel.add(showAngleDirectionCheckbox, gbc);
@@ -397,7 +420,7 @@ public class ConfigGUI extends JPanel {
         showCoordsBasedOnCheckBox.setToolTipText("<html>\nIf enabled, only overworld coords will be shown while you're in overworld,<br>and nether coords will be hidden.<br> Once you F3+C in the nether, only nether coords will be shown,<br>and overworld coords will be hidden.\n<br><br>\nIf disabled, both coords will always be shown.\n</html>");
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 6;
+        gbc.gridy = 7;
         gbc.anchor = GridBagConstraints.WEST;
         gbc.insets = new Insets(0, 0, 10, 0);
         enabledPanel.add(showCoordsBasedOnCheckBox, gbc);
@@ -405,7 +428,7 @@ public class ConfigGUI extends JPanel {
         panel4.setLayout(new GridBagLayout());
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
-        gbc.gridy = 7;
+        gbc.gridy = 8;
         gbc.fill = GridBagConstraints.BOTH;
         enabledPanel.add(panel4, gbc);
         columnsPanel = new JPanel();
@@ -457,13 +480,39 @@ public class ConfigGUI extends JPanel {
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 0, 0, 5);
         panel6.add(showDummyMeasurementButton, gbc);
-        updateOBSOverlayButton = new JButton();
-        updateOBSOverlayButton.setText("Update OBS overlay");
+        final JPanel panel7 = new JPanel();
+        panel7.setLayout(new GridBagLayout());
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 5;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.fill = GridBagConstraints.VERTICAL;
+        gbc.insets = new Insets(0, 0, 5, 0);
+        enabledPanel.add(panel7, gbc);
+        final JLabel label6 = new JLabel();
+        label6.setText("Font:");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 0, 5);
+        panel7.add(label6, gbc);
+        changeFontButton = new JButton();
+        changeFontButton.setText("Change font");
+        gbc = new GridBagConstraints();
+        gbc.gridx = 2;
+        gbc.gridy = 0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.insets = new Insets(0, 0, 0, 5);
+        panel7.add(changeFontButton, gbc);
+        fontLabel = new JLabel();
+        fontLabel.setText("<font>");
         gbc = new GridBagConstraints();
         gbc.gridx = 1;
         gbc.gridy = 0;
-        gbc.fill = GridBagConstraints.HORIZONTAL;
-        panel6.add(updateOBSOverlayButton, gbc);
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(0, 0, 0, 5);
+        panel7.add(fontLabel, gbc);
         final JSeparator separator1 = new JSeparator();
         gbc = new GridBagConstraints();
         gbc.gridx = 0;
