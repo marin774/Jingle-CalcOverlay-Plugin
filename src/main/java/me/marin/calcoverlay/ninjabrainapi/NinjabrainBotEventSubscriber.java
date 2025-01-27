@@ -57,17 +57,17 @@ public class NinjabrainBotEventSubscriber {
         log(Level.INFO, "Disconnected from Ninjabrain Bot API.");
     }
 
-    public static final Gson GSON = new Gson();
+    public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     private static final Object LOCK = new Object();
     @Getter
     private JsonObject latestResponse;
 
     public void subscribeToEvents() {
-        Debouncer debouncer = new Debouncer(600);
+        Debouncer debouncer = new Debouncer(CalcOverlaySettings.getInstance().imageSaveDebounceTime);
         list.add(sseClient.subscribe("stronghold", response -> {
             synchronized (LOCK) {
                 latestResponse = response;
-                debouncer.runTask(() -> OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(latestResponse)));
+                debouncer.runTask(() -> OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(response)));
             }
         }, this::disconnect));
     }

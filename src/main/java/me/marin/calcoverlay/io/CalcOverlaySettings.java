@@ -54,6 +54,12 @@ public class CalcOverlaySettings {
     @SerializedName("shown measurements")
     public int shownMeasurements = -1;
 
+    @SerializedName("save debounce time ms")
+    public int imageSaveDebounceTime = 700;
+
+    @SerializedName("font")
+    public FontData fontData = new FontData("Calibri", Font.PLAIN, 48);
+
     public static void load() {
         if (!Files.exists(SETTINGS_PATH)) {
             loadDefaultSettings();
@@ -125,7 +131,20 @@ public class CalcOverlaySettings {
             return null;
         }
 
+    }
 
+    @Data @AllArgsConstructor
+    public static class FontData {
+        @SerializedName("name")
+        private final String name;
+        @SerializedName("style")
+        private final int style;
+        @SerializedName("size")
+        private final int size;
+
+        public Font toFont() {
+            return new Font(name, style, size);
+        }
     }
 
     @Data @AllArgsConstructor
