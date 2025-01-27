@@ -37,7 +37,7 @@ compileJava {
 
 dependencies {
     // Choose Jingle version: https://jitpack.io/#DuncanRuns/Jingle/
-    implementation 'com.github.DuncanRuns:Jingle:v1.0.0'
+    implementation 'com.github.DuncanRuns:Jingle:v1.1.1'
 
     // lombok
     compileOnly 'org.projectlombok:lombok:1.18.34'
@@ -45,6 +45,9 @@ dependencies {
 
     // Jgoodies (GUI)
     shadow group: 'com.jgoodies', name: 'jgoodies-forms', version: '1.9.0'
+
+    // FontChooser
+    implementation "org.drjekyll:fontchooser:2.4"
 }
 
 shadowJar {
