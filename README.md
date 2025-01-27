@@ -1,6 +1,6 @@
 # Jingle Calc Overlay Plugin
 
-A Jingle plugin that makes a nicer Ninjabrain Bot OBS overlay. Overlays are customizable in settings.
+A Jingle plugin for a nicer Ninjabrain Bot OBS overlay. Overlays can be customized in settings.
 
 ![image](https://github.com/user-attachments/assets/5e522f9b-ef3b-46dc-bafa-728589848235)
 
@@ -27,16 +27,16 @@ Once you've installed the plugin and restarted Jingle, enable the plugin and con
 ## Configuration
 After you enabled the overlay, click "Open test overlay" in the Overlay Settings section. This will open a new window which displays a dummy measurement. You can use this window to instantly see how your overlay might look like in OBS. 
 
-![image](https://github.com/user-attachments/assets/e6e67be4-dabf-48d2-b0a5-ecc728484adc)
+![image](https://github.com/user-attachments/assets/ced8f53f-d7b7-4d2d-9a83-132f9578f0e3)
 
 ### Buttons
 - **Open test overlay** - opens the overlay for testing different settings, described above
-- **Update OBS overlay** - if you have an active measurement in Ninjabrain Bot, use this button to update the overlay image (you don't have to click it, settings are saved as you edit them)
 
 ### General settings
 - **Shown measurements** - number of displayed rows for measurements, between 1 and 5
 - **Overlay position** - positions the overlay within the image (image is always the same size, so this setting will anchor it to a corner)
 - **Overworld coords** - same as the Ninjabrain Bot setting
+- **Font** - customize the font, needs a pretty large size (44pt by default)
 - **Show angle direction** - whether to show what direction you need to go (shown next to Angle)
 - **Show coords based on dimension** - displays ONLY overworld or nether coords, depending on the last dimension you F3+C'd in
 
