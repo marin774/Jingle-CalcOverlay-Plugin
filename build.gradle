@@ -37,7 +37,7 @@ compileJava {
 
 dependencies {
     // Choose Jingle version: https://jitpack.io/#DuncanRuns/Jingle/
-    implementation 'com.github.DuncanRuns:Jingle:v1.1.1'
+    implementation 'com.github.DuncanRuns:Jingle:v1.1.3'
 
     // lombok
     compileOnly 'org.projectlombok:lombok:1.18.34'
