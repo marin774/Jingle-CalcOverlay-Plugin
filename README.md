@@ -46,6 +46,6 @@ After you enabled the overlay, click "Preview Overlay" in the Overlay Settings s
 
 ### Column settings
 - **Show column** - whether to show the column or not
-- **Show icon** - applies if the column is shown; whether to show text/icon above the column
+- **Header** - what to show above the column: text, icon, or nothing
 - **Move up** - moves the column 1 up (visually to the left)
 - **Move down** - moves the column 1 down (visually to the right)
