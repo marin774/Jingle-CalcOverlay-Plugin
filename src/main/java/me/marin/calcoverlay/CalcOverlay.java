@@ -14,6 +14,7 @@ import xyz.duncanruns.jingle.gui.JingleGUI;
 import xyz.duncanruns.jingle.plugin.PluginManager;
 import xyz.duncanruns.jingle.util.ExceptionUtil;
 
+import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Path;
@@ -30,7 +31,6 @@ public class CalcOverlay {
 
     public static final Path OVERLAY_PATH = CALC_OVERLAY_FOLDER_PATH.resolve("calc-overlay.png");
 
-    public static ConfigGUI CONFIG_GUI = null;
     public static final NinjabrainBotEventSubscriber NINJABRAIN_BOT_EVENT_SUBSCRIBER = new NinjabrainBotEventSubscriber();
 
     public static void main(String[] args) throws IOException {
@@ -53,7 +53,7 @@ public class CalcOverlay {
         CalcOverlaySettings.load();
         VersionUtil.Version version = version(CalcOverlaySettings.getInstance().version);
         if (version.isOlderThan(CURRENT_VERSION)) {
-            updateFrom(version);
+            updateData(version);
         }
 
         NINJABRAIN_BOT_EVENT_SUBSCRIBER.startConnectJob();
@@ -61,15 +61,25 @@ public class CalcOverlay {
         VersionUtil.deleteOldVersionJars();
         UpdateUtil.checkForUpdatesAndUpdate(true);
 
-        CONFIG_GUI = new ConfigGUI();
-        JingleGUI.addPluginTab("Calc Overlay", CONFIG_GUI);
+        JPanel configGUI = new ConfigGUI().mainPanel;
+        JingleGUI.addPluginTab("Calc Overlay", configGUI);
     }
 
-    public static void updateFrom(VersionUtil.Version version) {
-        log(Level.INFO, "Updating data from version " + version + ".");
-        if (version.isOlderThan(version("1.1.0"))) {
+    public static void updateData(VersionUtil.Version fromVersion) {
+        log(Level.INFO, "Updating data from version " + fromVersion + ".");
+        if (fromVersion.isOlderThan(version("1.1.0"))) {
             CalcOverlaySettings.getInstance().shownMeasurements = 3;
             log(Level.INFO, "[1.1.0] 'shown measurements' set to 3");
+        }
+
+        if (fromVersion.isOlderThan(version("1.3.0"))) {
+            for (CalcOverlaySettings.ColumnData cd : CalcOverlaySettings.getInstance().columnData) {
+                if (cd.isShowIcon()) {
+                    cd.setHeaderRow(CalcOverlaySettings.HeaderRow.ICON);
+                } else {
+                    cd.setHeaderRow(CalcOverlaySettings.HeaderRow.NOTHING);
+                }
+            }
         }
 
         CalcOverlaySettings.getInstance().version = CURRENT_VERSION.toString();

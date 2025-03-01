@@ -2,6 +2,7 @@ package me.marin.calcoverlay.io;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -25,39 +26,39 @@ import static me.marin.calcoverlay.CalcOverlay.log;
 @ToString
 public class CalcOverlaySettings {
 
-    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
 
     @Getter
     private static CalcOverlaySettings instance = null;
 
-    @SerializedName("calc overlay enabled")
+    @Expose @SerializedName("calc overlay enabled")
     public boolean calcOverlayEnabled;
 
-    @SerializedName("version")
+    @Expose @SerializedName("version")
     public String version;
 
-    @SerializedName("overlay overlayPosition")
+    @Expose @SerializedName(value = "overlay position", alternate = {"overlay overlayPosition"})
     public Position overlayPosition;
 
-    @SerializedName("columns")
+    @Expose @SerializedName("columns")
     public List<ColumnData> columnData;
 
-    @SerializedName("show angle direction")
+    @Expose @SerializedName("show angle direction")
     public boolean showAngleDirection;
 
-    @SerializedName("show coords based on dimension")
+    @Expose @SerializedName("show coords based on dimension")
     public boolean onlyShowCurrentDimensionCoords;
 
-    @SerializedName("overworld coords")
+    @Expose @SerializedName("overworld coords")
     public OverworldsCoords overworldCoords;
 
-    @SerializedName("shown measurements")
+    @Expose @SerializedName("shown measurements")
     public int shownMeasurements = -1;
 
-    @SerializedName("save debounce time ms")
+    @Expose @SerializedName("save debounce time ms")
     public int imageSaveDebounceTime = 700;
 
-    @SerializedName("font")
+    @Expose @SerializedName("font")
     public FontData fontData = new FontData("Calibri", Font.PLAIN, 48);
 
     public static void load() {
@@ -90,11 +91,11 @@ public class CalcOverlaySettings {
         instance.version = VersionUtil.CURRENT_VERSION.toString();
         instance.overlayPosition = Position.TOP_LEFT;
         instance.columnData = new ArrayList<>();
-        instance.columnData.add(new ColumnData(ColumnType.OVERWORLD_COORDS, true, true));
-        instance.columnData.add(new ColumnData(ColumnType.CERTAINTY, true, true));
-        instance.columnData.add(new ColumnData(ColumnType.DISTANCE, true, true));
-        instance.columnData.add(new ColumnData(ColumnType.NETHER_COORDS, true, true));
-        instance.columnData.add(new ColumnData(ColumnType.ANGLE, true, true));
+        instance.columnData.add(new ColumnData(ColumnType.OVERWORLD_COORDS, HeaderRow.ICON, true));
+        instance.columnData.add(new ColumnData(ColumnType.CERTAINTY, HeaderRow.ICON, true));
+        instance.columnData.add(new ColumnData(ColumnType.DISTANCE, HeaderRow.ICON, true));
+        instance.columnData.add(new ColumnData(ColumnType.NETHER_COORDS, HeaderRow.ICON, true));
+        instance.columnData.add(new ColumnData(ColumnType.ANGLE, HeaderRow.ICON, true));
         instance.showAngleDirection = true;
         instance.onlyShowCurrentDimensionCoords = false;
         instance.overworldCoords = OverworldsCoords.CHUNK;
@@ -103,13 +104,13 @@ public class CalcOverlaySettings {
 
     @AllArgsConstructor @Getter
     public enum Position {
-        @SerializedName("top left")
+        @Expose @SerializedName("top left")
         TOP_LEFT("Top left"),
-        @SerializedName("top right")
+        @Expose @SerializedName("top right")
         TOP_RIGHT("Top right"),
-        @SerializedName("bottom left")
+        @Expose @SerializedName("bottom left")
         BOTTOM_LEFT("Bottom left"),
-        @SerializedName("bottom right")
+        @Expose @SerializedName("bottom right")
         BOTTOM_RIGHT("Bottom right");
 
         public boolean isTop() {
@@ -135,11 +136,11 @@ public class CalcOverlaySettings {
 
     @Data @AllArgsConstructor
     public static class FontData {
-        @SerializedName("name")
+        @Expose @SerializedName("name")
         private final String name;
-        @SerializedName("style")
+        @Expose @SerializedName("style")
         private final int style;
-        @SerializedName("size")
+        @Expose @SerializedName("size")
         private final int size;
 
         public Font toFont() {
@@ -147,14 +148,25 @@ public class CalcOverlaySettings {
         }
     }
 
-    @Data @AllArgsConstructor
+    @Data
     public static class ColumnData {
-        @SerializedName("name")
+        @Expose @SerializedName("name")
         private final ColumnType columnType;
+        @Expose @SerializedName("header row")
+        private HeaderRow headerRow;
+
+        @Expose(serialize = false)
         @SerializedName("show icon")
-        private boolean showIcon;
-        @SerializedName("visible")
+        private boolean showIcon; // old setting
+
+        @Expose @SerializedName("visible")
         private boolean isVisible;
+
+        public ColumnData(ColumnType columnType, HeaderRow headerRow, boolean isVisible) {
+            this.columnType = columnType;
+            this.headerRow = headerRow;
+            this.isVisible = isVisible;
+        }
 
         public boolean shouldShow(boolean isInNether) {
             if (columnType == ColumnType.NETHER_COORDS && getInstance().onlyShowCurrentDimensionCoords) {
@@ -168,29 +180,67 @@ public class CalcOverlaySettings {
     }
 
     @AllArgsConstructor @Getter
-    public enum ColumnType {
-        @SerializedName("overworld coords")
-        OVERWORLD_COORDS("Overworld Coords", OverlayUtil.overworldIconImage),
-        @SerializedName("certainty")
-        CERTAINTY("Certainty", OverlayUtil.certaintyIconImage),
-        @SerializedName("distance")
-        DISTANCE("Distance", OverlayUtil.distanceIconImage),
-        @SerializedName("nether coords")
-        NETHER_COORDS("Nether Coords", OverlayUtil.netherIconImage),
-        @SerializedName("angle")
-        ANGLE("Angle", OverlayUtil.angleIconImage);
+    public enum HeaderRow {
+        @Expose @SerializedName("nothing")
+        NOTHING("Nothing"),
+        @Expose @SerializedName("show icon")
+        ICON("Icon"),
+        @Expose @SerializedName("show text")
+        TEXT("Text");
 
         private final String display;
+
+        public static HeaderRow match(String s) {
+            for (HeaderRow value : HeaderRow.values()) {
+                if (value.display.equals(s)) {
+                    return value;
+                }
+            }
+            return null;
+        }
+    }
+
+    @AllArgsConstructor
+    public enum ColumnType {
+        @Expose @SerializedName("overworld coords")
+        OVERWORLD_COORDS("Overworld Coords", "Location", OverlayUtil.overworldIconImage),
+        @Expose @SerializedName("certainty")
+        CERTAINTY("Certainty", "%", OverlayUtil.certaintyIconImage),
+        @Expose @SerializedName("distance")
+        DISTANCE("Distance", "Dist.", OverlayUtil.distanceIconImage),
+        @Expose @SerializedName("nether coords")
+        NETHER_COORDS("Nether Coords", "Nether", OverlayUtil.netherIconImage),
+        @Expose @SerializedName("angle")
+        ANGLE("Angle", "Angle", OverlayUtil.angleIconImage);
+
+        @Getter
+        private final String configDisplay;
+        private final String overlayDisplay;
+        @Getter
         private final Image icon;
+
+        public String getOverlayDisplay(OverworldsCoords coords) {
+            switch (this) {
+                default:
+                    return this.overlayDisplay;
+                case OVERWORLD_COORDS:
+                    switch (coords) {
+                        case CHUNK:
+                            return "Chunk";
+                        default:
+                            return "Location";
+                    }
+            }
+        }
     }
 
     @AllArgsConstructor @Getter
     public enum OverworldsCoords {
-        @SerializedName("chunk")
+        @Expose @SerializedName("chunk")
         CHUNK("Chunk"),
-        @SerializedName("(8, 8)")
+        @Expose @SerializedName("(8, 8)")
         EIGHT_EIGHT("(8, 8)"),
-        @SerializedName("(4, 4)")
+        @Expose @SerializedName("(4, 4)")
         FOUR_FOUR("(4, 4)");
 
         private final String display;

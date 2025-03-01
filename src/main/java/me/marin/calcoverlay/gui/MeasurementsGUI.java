@@ -21,17 +21,23 @@ public class MeasurementsGUI {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
-        gbc.insets = new Insets(18, 18, 10, 18);
+        gbc.insets = new Insets(18, 18, 5, 18);
 
         gbc.gridx = 0;
         // Icons
         for (CalcOverlaySettings.ColumnData columnData : CalcOverlaySettings.getInstance().columnData) {
             if (columnData.shouldShow(playerPosition.isInNether())) {
-                if (columnData.isShowIcon()) {
-                    JLabel overworldIcon = new JLabel();
-                    overworldIcon.setIcon(new ImageIcon(columnData.getColumnType().getIcon()));
-                    gbc.anchor = GridBagConstraints.CENTER;
-                    measurementsPanel.add(overworldIcon, gbc);
+                switch (columnData.getHeaderRow()) {
+                    case ICON:
+                        JLabel overworldIcon = new JLabel();
+                        overworldIcon.setIcon(new ImageIcon(columnData.getColumnType().getIcon()));
+                        gbc.anchor = GridBagConstraints.CENTER;
+                        measurementsPanel.add(overworldIcon, gbc);
+                        break;
+                    case TEXT:
+                        JLabel text = setupJLabel(columnData.getColumnType().getOverlayDisplay(CalcOverlaySettings.getInstance().overworldCoords));
+                        gbc.anchor = GridBagConstraints.SOUTH;
+                        measurementsPanel.add(text, gbc);
                 }
                 gbc.gridx += 1;
             }
