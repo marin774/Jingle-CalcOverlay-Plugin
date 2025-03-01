@@ -22,26 +22,30 @@ Once you've installed the plugin and restarted Jingle, enable the plugin and con
 1. Open the "Plugins" tab in Jingle.
 2. Click on "Open Config" next to Calc Overlay.
 3. Enable overlay by clicking on the "Enable overlay" checkbox.
-4. Add an Image Source to your OBS with the provided path (click "Copy File Path" to copy the image file path to your clipboard).
+4. Add an Image Source to your OBS with the provided path (click "Copy Image Path" to copy the image file path to your clipboard).
 
 ## Configuration
-After you enabled the overlay, click "Open test overlay" in the Overlay Settings section. This will open a new window which displays a dummy measurement. You can use this window to instantly see how your overlay might look like in OBS. 
+After you enabled the overlay, click "Preview Overlay" in the Overlay Settings section. This will open a new window that displays a dummy measurement. You can see how your layout might look like in OBS. 
 
-![image](https://github.com/user-attachments/assets/ced8f53f-d7b7-4d2d-9a83-132f9578f0e3)
+![example](https://github.com/user-attachments/assets/d4ab8839-2fcc-40ef-a6d1-2b6f9aa9257c)
+
 
 ### Buttons
-- **Open test overlay** - opens the overlay for testing different settings, described above
+- **Preview Overlay** - opens the overlay for testing different settings, described above
 
 ### General settings
 - **Shown measurements** - number of displayed rows for measurements, between 1 and 5
 - **Overlay position** - positions the overlay within the image (image is always the same size, so this setting will anchor it to a corner)
 - **Overworld coords** - same as the Ninjabrain Bot setting
-- **Font** - customize the font, needs a pretty large size (44pt by default)
+- **Font** - customize the font, needs a pretty large size (44pt by default).
+    > NOTE! <br>
+    > If you can't find an installed font, make sure to install the font for \*all users\*!<br>
+    > Right click the font file -> Install for all users.
 - **Show angle direction** - whether to show what direction you need to go (shown next to Angle)
 - **Show coords based on dimension** - displays ONLY overworld or nether coords, depending on the last dimension you F3+C'd in
 
 ### Column settings
 - **Show column** - whether to show the column or not
-- **Show icon** - if the column is visible, whether to show the icon above the column or not
-- **Move up** - moves the column 1 up
-- **Move down** - moves the column 1 down
+- **Show icon** - applies if the column is shown; whether to show text/icon above the column
+- **Move up** - moves the column 1 up (visually to the left)
+- **Move down** - moves the column 1 down (visually to the right)
