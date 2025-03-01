@@ -14,10 +14,7 @@ public class AngleToCoords {
         double zDiff = prediction.getChunkZ()*16+4 - playerPos.getZInOverworld();
         double angleToStructure = -Math.atan2(xDiff, zDiff) * 180 / Math.PI;
         double angleDifference = (angleToStructure - playerPos.getHorizontalAngle()) % 360;
-        if (angleDifference > 180)
-            angleDifference -= 360;
-        if (angleDifference < -180)
-            angleDifference += 360;
+        angleDifference = CalcOverlayUtil.normalizeAngle(angleDifference);
 
         return new AngleToCoords(angleToStructure, angleDifference);
     }
