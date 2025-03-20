@@ -15,6 +15,9 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.nio.charset.StandardCharsets;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -72,6 +75,7 @@ public class OverlayUtil {
 
         try {
             ImageIO.write(image, "png", CalcOverlay.OVERLAY_PATH.toFile());
+            Files.write(CalcOverlay.OBS_LINK_STATE_PATH, String.valueOf(System.nanoTime()).getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING);
         } catch (Exception e) {
             log(Level.ERROR, "Error while writing overlay:\n" + ExceptionUtil.toDetailedString(e));
         }

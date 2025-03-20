@@ -17,7 +17,9 @@ import xyz.duncanruns.jingle.util.ExceptionUtil;
 import javax.swing.*;
 import java.io.IOException;
 import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.Objects;
 
 import static me.marin.calcoverlay.util.VersionUtil.CURRENT_VERSION;
 import static me.marin.calcoverlay.util.VersionUtil.version;
@@ -30,6 +32,8 @@ public class CalcOverlay {
     public static final Path SETTINGS_PATH = CALC_OVERLAY_FOLDER_PATH.resolve("settings.json");
 
     public static final Path OVERLAY_PATH = CALC_OVERLAY_FOLDER_PATH.resolve("calc-overlay.png");
+    public static final Path OBS_LINK_STATE_PATH = CALC_OVERLAY_FOLDER_PATH.resolve("obs-link-state");
+    public static final Path OBS_SCRIPT_PATH = CALC_OVERLAY_FOLDER_PATH.resolve("calc-overlay-obs-link.lua");
 
     public static final NinjabrainBotEventSubscriber NINJABRAIN_BOT_EVENT_SUBSCRIBER = new NinjabrainBotEventSubscriber();
 
@@ -48,6 +52,8 @@ public class CalcOverlay {
 
         OverlayUtil.loadImagesAndStyles();
         CALC_OVERLAY_FOLDER_PATH.toFile().mkdirs();
+        createObsLinkStateFile();
+        createObsScriptFile();
         createOverlayFile();
 
         CalcOverlaySettings.load();
@@ -85,6 +91,22 @@ public class CalcOverlay {
         CalcOverlaySettings.getInstance().version = CURRENT_VERSION.toString();
         CalcOverlaySettings.save();
         log(Level.INFO, "Updated data to v" + CURRENT_VERSION);
+    }
+
+    private static void createObsLinkStateFile() {
+        try {
+            OBS_LINK_STATE_PATH.toFile().createNewFile();
+        } catch (Exception e) {
+            log(Level.ERROR, "Failed to create obs-link-state file:\n" + ExceptionUtil.toDetailedString(e));
+        }
+    }
+
+    private static void createObsScriptFile() {
+        try {
+            Files.copy(Objects.requireNonNull(CalcOverlay.class.getResourceAsStream("/calc-overlay-obs-link.lua")), OBS_SCRIPT_PATH);
+        } catch (IOException e) {
+            log(Level.ERROR, "Failed to write calc-overlay-obs-link.lua:\n" + ExceptionUtil.toDetailedString(e));
+        }
     }
 
     private static void createOverlayFile() {

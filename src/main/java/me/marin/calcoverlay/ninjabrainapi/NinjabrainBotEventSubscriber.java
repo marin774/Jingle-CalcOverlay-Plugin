@@ -63,11 +63,10 @@ public class NinjabrainBotEventSubscriber {
     private JsonObject latestResponse;
 
     public void subscribeToEvents() {
-        Debouncer debouncer = new Debouncer(CalcOverlaySettings.getInstance().imageSaveDebounceTime);
         list.add(sseClient.subscribe("stronghold", response -> {
             synchronized (LOCK) {
                 latestResponse = response;
-                debouncer.runTask(() -> OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(response)));
+                OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(response));
             }
         }, this::disconnect));
     }

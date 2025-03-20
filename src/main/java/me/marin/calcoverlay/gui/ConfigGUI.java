@@ -20,6 +20,7 @@ import javax.swing.text.StyleContext;
 import java.awt.*;
 import java.awt.datatransfer.Clipboard;
 import java.awt.datatransfer.StringSelection;
+import java.net.URI;
 import java.util.Locale;
 
 import static me.marin.calcoverlay.CalcOverlay.*;
@@ -34,7 +35,6 @@ public class ConfigGUI extends JPanel {
     private JComboBox<String> overworldCoordsTypeCombobox;
     private JPanel columnsPanel;
     private JComboBox<String> overlayPositionCombobox;
-    private JButton copyFilePathButton;
     private JCheckBox showAngleDirectionCheckbox;
     private JButton checkForUpdatesButton;
     private JPanel enabledPanel;
@@ -42,6 +42,8 @@ public class ConfigGUI extends JPanel {
     private JSpinner shownMeasurementsSpinner;
     private JLabel fontLabel;
     private JButton changeFontButton;
+    private JButton copyScriptPathButton;
+    private JButton OBSScriptSetupButton;
 
     private JFrame testFrame;
     private JPanel testPanel;
@@ -134,11 +136,19 @@ public class ConfigGUI extends JPanel {
             updateTestGUI();
         });
 
-        copyFilePathButton.addActionListener(a -> {
-            StringSelection stringSelection = new StringSelection(OVERLAY_PATH.toAbsolutePath().toString());
+        copyScriptPathButton.addActionListener(a -> {
+            StringSelection stringSelection = new StringSelection(OBS_SCRIPT_PATH.toAbsolutePath().toString());
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
             JOptionPane.showMessageDialog(null, "Copied to clipboard.");
+        });
+
+        OBSScriptSetupButton.addActionListener(a -> {
+            try {
+                Desktop.getDesktop().browse(URI.create("https://github.com/marin774/Jingle-CalcOverlay-Plugin/blob/main/setup.md#setup-obs-script--overlay"));
+            } catch (Exception e) {
+                log(Level.ERROR, "Failed to open:\n" + ExceptionUtil.toDetailedString(e));
+            }
         });
 
         shownMeasurementsSpinner.setModel(new SpinnerNumberModel(settings.shownMeasurements, 1, 5, 1));
@@ -300,7 +310,7 @@ public class ConfigGUI extends JPanel {
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         enabledCheckbox = new JCheckBox();
         enabledCheckbox.setText("Enable overlay");
-        mainPanel.add(enabledCheckbox, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        mainPanel.add(enabledCheckbox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         enabledPanel = new JPanel();
         enabledPanel.setLayout(new GridLayoutManager(8, 1, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.add(enabledPanel, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
@@ -372,18 +382,21 @@ public class ConfigGUI extends JPanel {
         panel6.add(fontLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JSeparator separator1 = new JSeparator();
         mainPanel.add(separator1, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel7 = new JPanel();
+        panel7.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.add(panel7, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label6 = new JLabel();
+        label6.setText("Path to OBS Script:");
+        panel7.add(label6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        copyScriptPathButton = new JButton();
+        copyScriptPathButton.setText("Copy Script Path");
+        panel7.add(copyScriptPathButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        OBSScriptSetupButton = new JButton();
+        OBSScriptSetupButton.setText("OBS Script Setup");
+        panel7.add(OBSScriptSetupButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         checkForUpdatesButton = new JButton();
         checkForUpdatesButton.setText("Check for updates");
-        mainPanel.add(checkForUpdatesButton, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel7 = new JPanel();
-        panel7.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        mainPanel.add(panel7, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        copyFilePathButton = new JButton();
-        copyFilePathButton.setText("Copy Image Path");
-        panel7.add(copyFilePathButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label6 = new JLabel();
-        label6.setText("Overlay image for OBS:");
-        panel7.add(label6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        mainPanel.add(checkForUpdatesButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
     }
 
     /**

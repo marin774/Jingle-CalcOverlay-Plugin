@@ -55,9 +55,6 @@ public class CalcOverlaySettings {
     @Expose @SerializedName("shown measurements")
     public int shownMeasurements = -1;
 
-    @Expose @SerializedName("save debounce time ms")
-    public int imageSaveDebounceTime = 700;
-
     @Expose @SerializedName("font")
     public FontData fontData = new FontData("Calibri", Font.PLAIN, 48);
 
