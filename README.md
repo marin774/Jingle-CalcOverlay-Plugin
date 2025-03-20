@@ -9,7 +9,7 @@ A Jingle plugin for a nicer Ninjabrain Bot OBS overlay. Overlays can be customiz
 Download the latest version from the [Releases](https://github.com/marin774/Jingle-CalcOverlay-Plugin/releases) page. Drag and drop it into your Jingle plugins folder, and restart Jingle.
 
 ## Setup
-Read how to set up Calc Overlay [here](setup.md#enable-api-in-ninjabrain-bot).
+See how to set up Calc Overlay [here](setup.md#calc-overlay-setup).
 
 ## Configuration
-Read how to configure Calc Overlay [here](setup.md#configuring-calc-overlay).
+See how to configure Calc Overlay [here](setup.md#configuring-calc-overlay).
