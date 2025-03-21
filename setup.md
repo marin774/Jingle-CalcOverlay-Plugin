@@ -21,6 +21,9 @@ Once you've installed the plugin and restarted Jingle, enable the plugin and con
 
 ## Setup OBS Script & Overlay
 1. In Jingle, click "Copy Script Path" button.
+   
+   ![image](https://github.com/user-attachments/assets/0df671e0-d77a-4e77-96a6-b4e366baba08)
+
 2. Open OBS. Navigate to "Tools" -> "Scripts".
 
    ![image](https://kappa.lol/CJ3qxg)
@@ -39,27 +42,42 @@ Once you've installed the plugin and restarted Jingle, enable the plugin and con
 
 
 ## Configuring Calc Overlay
-After you enabled the overlay, click "Preview Overlay" in the Overlay Settings section. This will open a new window that displays a dummy measurement. You can see how your layout might look like in OBS.
+There is a lot of configuration you can do. I'll go over each setting:
 
-![example](https://github.com/user-attachments/assets/d4ab8839-2fcc-40ef-a6d1-2b6f9aa9257c)
-
-
-### Buttons
-- **Preview Overlay** - opens the overlay for testing different settings, described above
-
-### General settings
-- **Shown measurements** - number of displayed rows for measurements, between 1 and 5
-- **Overlay position** - positions the overlay within the image (image is always the same size, so this setting will anchor it to a corner)
-- **Overworld coords** - same as the Ninjabrain Bot setting
+### General
 - **Font** - customize the font, needs a pretty large size (44pt by default).
   > NOTE! <br>
   > If you can't find an installed font, make sure to install the font for \*all users\*!<br>
   > Right-click the font file -> Install for all users.
-- **Show angle direction** - whether to show what direction you need to go (shown next to Angle)
-- **Show coords based on dimension** - displays ONLY overworld or nether coords, depending on the last dimension you F3+C'd in
+- **Overlay position** - positions the overlay within the image (image is always the same size, so this setting will anchor it to a corner)
 
-### Column settings
+### Eye Throws Overlay
+Click "Preview Eye Throws Overlay". This will open a new window that displays a dummy eye throw measurement. You can see how your layout might look like in OBS.
+
+- **Shown measurements** - number of displayed rows for measurements, between 1 and 5
+- **Overworld coords** - same as the Ninjabrain Bot setting (chunk, 8-8 or 4-4)
+- **Show angle direction** - whether to show what direction you need to go (shown next to Angle, e.g. `(<- 14.2)`)
+- **Show Overworld/Nether coords based on dimension** - displays ONLY overworld or nether coords, depending on the last dimension you F3+C'd in (even if they are both disabled in Column Settings)
+
+#### Columns
 - **Show column** - whether to show the column or not
 - **Header** - what to show above the column: text, icon, or nothing
-- **Move up** - moves the column 1 up (visually to the left)
-- **Move down** - moves the column 1 down (visually to the right)
+- **Move left** - moves the column 1 place left
+- **Move down** - moves the column 1 place right
+  
+### All Advancements Overlay
+NOTE: This overlay will only show once your Ninjabrain Bot is in "All Advancements" mode.
+![image](https://github.com/user-attachments/assets/549a16a7-d974-4d92-a7d0-0851924fa1bc)
+
+Click "Preview All Advancements Overlay". This will open a new window that displays a dummy All Advancements tab. You can see how your layout might look like in OBS.
+
+#### Columns
+- **Show column** - whether to show the column or not
+- **Header** - what to show above the column: text or nothing
+- **Move left** - moves the column 1 place left
+- **Move down** - moves the column 1 place right
+
+#### Rows
+- **Show row** - whether to show the row or not
+- **Move up** - moves the column 1 place up
+- **Move left** - moves the column 1 place left
