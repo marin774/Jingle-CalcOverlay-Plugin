@@ -1,4 +1,4 @@
-package me.marin.calcoverlay.util;
+package me.marin.calcoverlay.util.data;
 
 import lombok.Data;
 import lombok.ToString;

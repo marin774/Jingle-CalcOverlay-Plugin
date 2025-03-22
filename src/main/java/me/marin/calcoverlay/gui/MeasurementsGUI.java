@@ -3,6 +3,9 @@ package me.marin.calcoverlay.gui;
 import lombok.Getter;
 import me.marin.calcoverlay.io.CalcOverlaySettings;
 import me.marin.calcoverlay.util.*;
+import me.marin.calcoverlay.util.data.AngleToCoords;
+import me.marin.calcoverlay.util.data.PlayerPosition;
+import me.marin.calcoverlay.util.data.Prediction;
 import org.apache.commons.lang3.tuple.Pair;
 
 import javax.swing.*;

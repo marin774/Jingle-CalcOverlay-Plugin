@@ -1,6 +1,7 @@
-package me.marin.calcoverlay.util;
+package me.marin.calcoverlay.util.data;
 
 import lombok.Data;
+import me.marin.calcoverlay.util.CalcOverlayUtil;
 
 @Data
 public class AngleToCoords {
