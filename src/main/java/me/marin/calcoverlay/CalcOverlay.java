@@ -103,7 +103,7 @@ public class CalcOverlay {
 
     private static void createObsScriptFile() {
         try {
-            Files.copy(Objects.requireNonNull(CalcOverlay.class.getResourceAsStream("/calc-overlay-obs-link.lua")), OBS_SCRIPT_PATH);
+            Files.copy(Objects.requireNonNull(CalcOverlay.class.getResourceAsStream("/calc-overlay-obs-link.lua")), OBS_SCRIPT_PATH, StandardCopyOption.REPLACE_EXISTING);
         } catch (IOException e) {
             log(Level.ERROR, "Failed to write calc-overlay-obs-link.lua:\n" + ExceptionUtil.toDetailedString(e));
         }
