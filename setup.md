@@ -45,13 +45,21 @@ Once you've installed the plugin and restarted Jingle, enable the plugin and con
 There is a lot of configuration you can do. I'll go over each setting:
 
 ### General
+
+![image](https://github.com/user-attachments/assets/b566b614-b00e-455c-b65e-13944aef6f9a)
+
 - **Font** - customize the font, needs a pretty large size (44pt by default).
   > NOTE! <br>
   > If you can't find an installed font, make sure to install the font for \*all users\*!<br>
   > Right-click the font file -> Install for all users.
 - **Overlay position** - positions the overlay within the image (image is always the same size, so this setting will anchor it to a corner)
 
+---
+
 ### Eye Throws Overlay
+
+![image](https://github.com/user-attachments/assets/0427a2ee-0e0a-4bdd-a950-1fca1dd66c67)
+
 Click "Preview Eye Throws Overlay". This will open a new window that displays a dummy eye throw measurement. You can see how your layout might look like in OBS.
 
 - **Shown measurements** - number of displayed rows for measurements, between 1 and 5
@@ -64,9 +72,14 @@ Click "Preview Eye Throws Overlay". This will open a new window that displays a 
 - **Header** - what to show above the column: text, icon, or nothing
 - **Move left** - moves the column 1 place left
 - **Move down** - moves the column 1 place right
-  
+
+---
+
 ### All Advancements Overlay
-NOTE: This overlay will only show once your Ninjabrain Bot is in "All Advancements" mode.
+
+![image](https://github.com/user-attachments/assets/39235014-4408-4b69-9c15-374bf65dd098)
+
+**NOTE**: This overlay will show on OBS if your Ninjabrain Bot is in "All Advancements" mode (pictured below).
 ![image](https://github.com/user-attachments/assets/549a16a7-d974-4d92-a7d0-0851924fa1bc)
 
 Click "Preview All Advancements Overlay". This will open a new window that displays a dummy All Advancements tab. You can see how your layout might look like in OBS.
