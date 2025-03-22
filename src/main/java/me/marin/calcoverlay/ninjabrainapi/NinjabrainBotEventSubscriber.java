@@ -66,9 +66,15 @@ public class NinjabrainBotEventSubscriber {
         list.add(sseClient.subscribe("stronghold", response -> {
             synchronized (LOCK) {
                 latestResponse = response;
-                OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(response));
+                updateImage();
             }
         }, this::disconnect));
+    }
+
+    public void updateImage() {
+        synchronized (LOCK) {
+            OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(latestResponse));
+        }
     }
 
 }

@@ -1,12 +1,17 @@
 package me.marin.calcoverlay.util;
 
-import com.google.gson.JsonArray;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
+import com.google.gson.*;
 import me.marin.calcoverlay.CalcOverlay;
+import me.marin.calcoverlay.gui.AllAdvancementsGUI;
+import me.marin.calcoverlay.gui.ConfigGUI;
 import me.marin.calcoverlay.gui.HomePortalGUI;
 import me.marin.calcoverlay.gui.MeasurementsGUI;
+import me.marin.calcoverlay.io.AllAdvancementsSettings;
 import me.marin.calcoverlay.io.CalcOverlaySettings;
+import me.marin.calcoverlay.util.data.AngleToCoords;
+import me.marin.calcoverlay.util.data.PlayerPosition;
+import me.marin.calcoverlay.util.data.Position;
+import me.marin.calcoverlay.util.data.Prediction;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.Level;
 import xyz.duncanruns.jingle.util.ExceptionUtil;
@@ -18,9 +23,8 @@ import java.awt.image.BufferedImage;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Objects;
 
 import static me.marin.calcoverlay.CalcOverlay.NINJABRAIN_BOT_EVENT_SUBSCRIBER;
 import static me.marin.calcoverlay.CalcOverlay.log;
@@ -35,6 +39,11 @@ public class OverlayUtil {
     public static Image certaintyIconImage = null;
     public static Image angleIconImage = null;
 
+    public static Image monumentIconImage = null;
+    public static Image outpostIconImage = null;
+    public static Image spawnIconImage = null;
+    public static Image strongholdIconImage = null;
+
     public static void loadImagesAndStyles() {
         try {
             homeIconImage = ImageIO.read(Objects.requireNonNull(OverlayUtil.class.getResource("/icons/home.png")));
@@ -43,6 +52,11 @@ public class OverlayUtil {
             distanceIconImage = ImageIO.read(Objects.requireNonNull(OverlayUtil.class.getResource("/icons/distance.png")));
             certaintyIconImage = ImageIO.read(Objects.requireNonNull(OverlayUtil.class.getResource("/icons/certainty.png")));
             angleIconImage = ImageIO.read(Objects.requireNonNull(OverlayUtil.class.getResource("/icons/angle.png")));
+
+            monumentIconImage = ImageIO.read(Objects.requireNonNull(OverlayUtil.class.getResource("/icons/aa/monument_icon.png")));
+            outpostIconImage = ImageIO.read(Objects.requireNonNull(OverlayUtil.class.getResource("/icons/aa/outpost_icon.png")));
+            spawnIconImage = ImageIO.read(Objects.requireNonNull(OverlayUtil.class.getResource("/icons/aa/spawn_icon.png")));
+            strongholdIconImage = ImageIO.read(Objects.requireNonNull(OverlayUtil.class.getResource("/icons/aa/stronghold_icon.png")));
         } catch (Exception e) {
            log(Level.ERROR, "Error while reading images from resources:\n" + ExceptionUtil.toDetailedString(e));
         }
@@ -62,6 +76,10 @@ public class OverlayUtil {
                 predictions,
                 playerPosition
         ).getMainPanel();
+    }
+
+    public static JPanel allAdvancements(Map<AllAdvancementsSettings.RowType, Position> positions) {
+        return new AllAdvancementsGUI(positions).getMainPanel();
     }
 
     public static JPanel empty() {
@@ -105,9 +123,11 @@ public class OverlayUtil {
 
 
     public static JPanel getPanelForStronghold(JsonObject response) {
-        String resultType = response.get("resultType").getAsString();
+        if (response == null || response.isJsonNull()) {
+            return OverlayUtil.empty();
+        }
 
-        switch (resultType) {
+        switch (response.get("resultType").getAsString()) {
             default:
             case "NONE":
             case "FAILED":
@@ -128,7 +148,47 @@ public class OverlayUtil {
                 }
 
                 return OverlayUtil.measurements(predictionsList, playerPosition);
+            case "ALL_ADVANCEMENTS":
+                JsonObject aaResponse = NINJABRAIN_BOT_EVENT_SUBSCRIBER.getSseClient().get("all-advancements");
+
+                return getPanelForAllAdvancements(aaResponse);
         }
+    }
+
+    public static JPanel getPreviewPanel(ConfigGUI.PreviewType previewType) {
+        switch (previewType) {
+            default:
+            case EYE_THROWS:
+                return getPanelForStronghold(previewType.getResponse());
+            case ALL_ADVANCEMENTS:
+                return getPanelForAllAdvancements(previewType.getResponse());
+        }
+    }
+
+    public static JPanel getPanelForAllAdvancements(JsonObject aaResponse) {
+        if (!aaResponse.get("isAllAdvancementsModeEnabled").getAsBoolean()) {
+            return OverlayUtil.empty();
+        }
+
+        Gson gson = new GsonBuilder()
+                .setPrettyPrinting()
+                .registerTypeAdapter(Position.class, (JsonDeserializer<Position>) (json, type, context) -> {
+                    if (json.isJsonObject() && json.getAsJsonObject().entrySet().isEmpty()) {
+                        return null;
+                    }
+                    return new Gson().fromJson(json, Position.class);
+                })
+                .create();
+
+        Map<AllAdvancementsSettings.RowType, Position> positions = new LinkedHashMap<>();
+        positions.put(AllAdvancementsSettings.RowType.STRONGHOLD,  gson.fromJson(aaResponse.get("stronghold"), Position.class));
+        positions.put(AllAdvancementsSettings.RowType.SPAWN,  gson.fromJson(aaResponse.get("spawn"), Position.class));
+        positions.put(AllAdvancementsSettings.RowType.OUTPOST,  gson.fromJson(aaResponse.get("outpost"), Position.class));
+        positions.put(AllAdvancementsSettings.RowType.MONUMENT,  gson.fromJson(aaResponse.get("monument"), Position.class));
+
+        CalcOverlay.log(Level.DEBUG, positions.toString());
+
+        return OverlayUtil.allAdvancements(positions);
     }
 
     public static JPanel getPanelForBlindCoords() {

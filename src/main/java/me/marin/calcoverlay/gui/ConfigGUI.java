@@ -3,6 +3,10 @@ package me.marin.calcoverlay.gui;
 import com.google.gson.JsonObject;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
+import com.intellij.uiDesigner.core.Spacer;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import me.marin.calcoverlay.io.AllAdvancementsSettings;
 import me.marin.calcoverlay.io.CalcOverlaySettings;
 import me.marin.calcoverlay.util.CalcOverlayUtil;
 import me.marin.calcoverlay.util.OverlayUtil;
@@ -31,26 +35,42 @@ public class ConfigGUI extends JPanel {
     public JPanel mainPanel;
     public JCheckBox enabledCheckbox;
 
-    private JCheckBox showCoordsBasedOnCheckBox;
+    private JCheckBox showCoordsBasedOnCheckbox;
     private JComboBox<String> overworldCoordsTypeCombobox;
-    private JPanel columnsPanel;
+    private JPanel eyeThrowsColumnsPanel;
     private JComboBox<String> overlayPositionCombobox;
     private JCheckBox showAngleDirectionCheckbox;
     private JButton checkForUpdatesButton;
     private JPanel enabledPanel;
-    private JButton showDummyMeasurementButton;
+    private JButton previewEyeThrowsOverlayButton;
     private JSpinner shownMeasurementsSpinner;
     private JLabel fontLabel;
     private JButton changeFontButton;
     private JButton copyScriptPathButton;
     private JButton OBSScriptSetupButton;
+    private JTabbedPane settingsPane;
+    private JButton previewAAOverlayButton;
+    private JPanel aaColumnsPanel;
+    private JPanel aaRowsPanel;
 
-    private JFrame testFrame;
-    private JPanel testPanel;
-    private final JsonObject dummyMeasurement = GSON.fromJson(
-            "{\"eyeThrows\":[{\"xInOverworld\":1199.63,\"angleWithoutCorrection\":-161.14926034190884,\"zInOverworld\":-139.09,\"angle\":-161.13926034190885,\"correction\":0.01,\"error\":0.0014111816929869292,\"type\":\"NORMAL\"}],\"resultType\":\"TRIANGULATION\",\"playerPosition\":{\"xInOverworld\":1199.63,\"isInOverworld\":true,\"isInNether\":false,\"horizontalAngle\":-161.15,\"zInOverworld\":-139.09},\"predictions\":[{\"overworldDistance\":523.3899550048701,\"certainty\":0.5147413124532876,\"chunkX\":85,\"chunkZ\":-40},{\"overworldDistance\":1216.5659558774444,\"certainty\":0.2674146623130985,\"chunkX\":99,\"chunkZ\":-81},{\"overworldDistance\":1859.1560464361241,\"certainty\":0.1252834863035146,\"chunkX\":112,\"chunkZ\":-119},{\"overworldDistance\":1909.7519223710706,\"certainty\":0.07908349382318092,\"chunkX\":113,\"chunkZ\":-122},{\"overworldDistance\":1165.9697787678717,\"certainty\":0.012493314849953712,\"chunkX\":98,\"chunkZ\":-78}]}",
-            JsonObject.class
-    );
+    private JFrame previewFrame;
+    private JPanel previewPanel;
+    private PreviewType previewType;
+
+    @AllArgsConstructor
+    @Getter
+    public enum PreviewType {
+        EYE_THROWS(GSON.fromJson(
+                "{\"eyeThrows\":[{\"xInOverworld\":1199.63,\"angleWithoutCorrection\":-161.14926034190884,\"zInOverworld\":-139.09,\"angle\":-161.13926034190885,\"correction\":0.01,\"error\":0.0014111816929869292,\"type\":\"NORMAL\"}],\"resultType\":\"TRIANGULATION\",\"playerPosition\":{\"xInOverworld\":1199.63,\"isInOverworld\":true,\"isInNether\":false,\"horizontalAngle\":-161.15,\"zInOverworld\":-139.09},\"predictions\":[{\"overworldDistance\":523.3899550048701,\"certainty\":0.5147413124532876,\"chunkX\":85,\"chunkZ\":-40},{\"overworldDistance\":1216.5659558774444,\"certainty\":0.2674146623130985,\"chunkX\":99,\"chunkZ\":-81},{\"overworldDistance\":1859.1560464361241,\"certainty\":0.1252834863035146,\"chunkX\":112,\"chunkZ\":-119},{\"overworldDistance\":1909.7519223710706,\"certainty\":0.07908349382318092,\"chunkX\":113,\"chunkZ\":-122},{\"overworldDistance\":1165.9697787678717,\"certainty\":0.012493314849953712,\"chunkX\":98,\"chunkZ\":-78}]}",
+                JsonObject.class
+        )),
+        ALL_ADVANCEMENTS(GSON.fromJson(
+                "{\"generalLocation\":{},\"spawn\":{\"overworldDistance\":4340,\"xInOverworld\":-94,\"zInOverworld\":-236,\"travelAngle\":-130.84419338173197},\"cityQuery\":{},\"monument\":{\"overworldDistance\":0,\"xInOverworld\":-3378,\"zInOverworld\":2602,\"travelAngle\":132.08916217383447},\"shulkerTransport\":{},\"stronghold\":{\"overworldDistance\":5381,\"xInOverworld\":1764,\"zInOverworld\":1012,\"travelAngle\":-107.19020650452967},\"deepDark\":{},\"isAllAdvancementsModeEnabled\":true,\"outpost\":{\"overworldDistance\":4149,\"xInOverworld\":-347,\"zInOverworld\":-232,\"travelAngle\":-133.0877053812539}}",
+                JsonObject.class
+        ));
+
+        private final JsonObject response;
+    }
 
     public static void main(String[] args) {
         // I run this to force intellij to update gui code
@@ -76,43 +96,46 @@ public class ConfigGUI extends JPanel {
                     return;
                 }
             } else {
-                if (testFrame.isVisible()) {
-                    testFrame.setVisible(false);
-                }
+                previewFrame.setVisible(false);
                 NINJABRAIN_BOT_EVENT_SUBSCRIBER.disconnect();
             }
 
             settings.calcOverlayEnabled = enabledCheckbox.isSelected();
             CalcOverlaySettings.save();
 
-            enabledPanel.setVisible(settings.calcOverlayEnabled);
+            updateGUI();
         });
 
-        enabledPanel.setVisible(settings.calcOverlayEnabled);
+        previewFrame = new JFrame();
 
-        testFrame = new JFrame();
-
-        testFrame.setTitle("Test Overlay");
-        testFrame.setResizable(false);
-        testFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-        updateTestGUI();
-        showDummyMeasurementButton.addActionListener(a -> {
-            testFrame.setVisible(true);
-            testFrame.requestFocus();
+        previewFrame.setTitle("Overlay Preview");
+        previewFrame.setResizable(false);
+        previewFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+        previewEyeThrowsOverlayButton.addActionListener(a -> {
+            previewType = PreviewType.EYE_THROWS;
+            updatePreview();
+            previewFrame.setVisible(true);
+            previewFrame.requestFocus();
+        });
+        previewAAOverlayButton.addActionListener(a -> {
+            previewType = PreviewType.ALL_ADVANCEMENTS;
+            updatePreview();
+            previewFrame.setVisible(true);
+            previewFrame.requestFocus();
         });
 
         showAngleDirectionCheckbox.setSelected(settings.showAngleDirection);
         showAngleDirectionCheckbox.addActionListener(a -> {
             settings.showAngleDirection = showAngleDirectionCheckbox.isSelected();
             CalcOverlaySettings.save();
-            updateTestGUI();
+            updatePreview();
         });
 
-        showCoordsBasedOnCheckBox.setSelected(settings.onlyShowCurrentDimensionCoords);
-        showCoordsBasedOnCheckBox.addActionListener(a -> {
-            settings.onlyShowCurrentDimensionCoords = showCoordsBasedOnCheckBox.isSelected();
+        showCoordsBasedOnCheckbox.setSelected(settings.onlyShowCurrentDimensionCoords);
+        showCoordsBasedOnCheckbox.addActionListener(a -> {
+            settings.onlyShowCurrentDimensionCoords = showCoordsBasedOnCheckbox.isSelected();
             CalcOverlaySettings.save();
-            updateTestGUI();
+            updatePreview();
         });
 
 
@@ -123,7 +146,7 @@ public class ConfigGUI extends JPanel {
         overworldCoordsTypeCombobox.addActionListener(a -> {
             settings.overworldCoords = CalcOverlaySettings.OverworldsCoords.match((String) overworldCoordsTypeCombobox.getSelectedItem());
             CalcOverlaySettings.save();
-            updateTestGUI();
+            updatePreview();
         });
 
         for (CalcOverlaySettings.Position value : CalcOverlaySettings.Position.values()) {
@@ -133,7 +156,7 @@ public class ConfigGUI extends JPanel {
         overlayPositionCombobox.addActionListener(a -> {
             settings.overlayPosition = CalcOverlaySettings.Position.match((String) overlayPositionCombobox.getSelectedItem());
             CalcOverlaySettings.save();
-            updateTestGUI();
+            updatePreview();
         });
 
         copyScriptPathButton.addActionListener(a -> {
@@ -156,7 +179,7 @@ public class ConfigGUI extends JPanel {
         shownMeasurementsSpinner.addChangeListener(a -> {
             settings.shownMeasurements = (int) shownMeasurementsSpinner.getValue();
             CalcOverlaySettings.save();
-            updateTestGUI();
+            updatePreview();
         });
 
         changeFontButton.addActionListener(a -> {
@@ -169,7 +192,7 @@ public class ConfigGUI extends JPanel {
                     Font font = dialog.getSelectedFont();
                     settings.fontData = new CalcOverlaySettings.FontData(font.getName(), font.getStyle(), font.getSize());
                     CalcOverlaySettings.save();
-                    updateTestGUI();
+                    updatePreview();
                     updateGUI();
                 }
             } catch (Exception e) {
@@ -179,26 +202,44 @@ public class ConfigGUI extends JPanel {
 
     }
 
-    private void updateTestGUI() {
-        if (testPanel != null) {
-            testFrame.remove(testPanel);
+    private void updatePreview() {
+        if (previewPanel != null) {
+            previewFrame.remove(previewPanel);
         }
-        testPanel = OverlayUtil.getFinalOverlayPanel(OverlayUtil.getPanelForStronghold(dummyMeasurement));
-        // OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(dummyMeasurement));
-        testFrame.add(testPanel);
-        testFrame.setSize(testPanel.getSize());
-        testFrame.revalidate();
-        testFrame.repaint();
+
+        // Update OBS
+        NINJABRAIN_BOT_EVENT_SUBSCRIBER.updateImage();
+
+        // Update preview panel
+        previewPanel = OverlayUtil.getFinalOverlayPanel(OverlayUtil.getPreviewPanel(previewType));
+
+        previewFrame.add(previewPanel);
+        previewFrame.setSize(previewPanel.getSize());
+        previewFrame.revalidate();
+        previewFrame.repaint();
     }
 
     public void updateGUI() {
         CalcOverlaySettings settings = CalcOverlaySettings.getInstance();
 
+        enabledPanel.setVisible(settings.calcOverlayEnabled);
+
         Font font = CalcOverlayUtil.getFont();
         String style = font.isPlain() ? "Plain, " : ((font.isBold() ? "Bold, " : "") + (font.isItalic() ? "Italic, " : ""));
         fontLabel.setText(font.getFamily() + ", " + style + font.getSize() + "pt");
 
-        columnsPanel.removeAll();
+        setupEyeThrowsPanel();
+        setupAARowsPanel();
+        setupAAColumnsPanel();
+
+        revalidate();
+        repaint();
+    }
+
+    private void setupEyeThrowsPanel() {
+        CalcOverlaySettings settings = CalcOverlaySettings.getInstance();
+
+        eyeThrowsColumnsPanel.removeAll();
 
         GridBagConstraints gbc = new GridBagConstraints();
         final int hGap = 5;
@@ -211,13 +252,13 @@ public class ConfigGUI extends JPanel {
         showColumnLabel.setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridx = 1;
         gbc.anchor = GridBagConstraints.CENTER;
-        columnsPanel.add(showColumnLabel, gbc);
+        eyeThrowsColumnsPanel.add(showColumnLabel, gbc);
 
         JLabel showIconLabel = new JLabel("Header");
         showIconLabel.setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridx = 2;
-        gbc.anchor = GridBagConstraints.CENTER;
-        columnsPanel.add(showIconLabel, gbc);
+        gbc.anchor = GridBagConstraints.SOUTH;
+        eyeThrowsColumnsPanel.add(showIconLabel, gbc);
 
         gbc.gridy = 1;
         gbc.insets = new Insets(vGap, 0, vGap, hGap);
@@ -225,25 +266,25 @@ public class ConfigGUI extends JPanel {
             JLabel columnNameLabel = new JLabel(columnData.getColumnType().getConfigDisplay());
             gbc.gridx = 0;
             gbc.anchor = GridBagConstraints.EAST;
-            columnsPanel.add(columnNameLabel, gbc);
+            eyeThrowsColumnsPanel.add(columnNameLabel, gbc);
 
             JCheckBox showColumnCheckbox = new JCheckBox();
             showColumnCheckbox.setSelected(columnData.isVisible());
             showColumnCheckbox.addActionListener(a -> {
                 columnData.setVisible(showColumnCheckbox.isSelected());
                 CalcOverlaySettings.save();
-                updateTestGUI();
+                updatePreview();
             });
             gbc.gridx = 1;
             gbc.anchor = GridBagConstraints.CENTER;
-            columnsPanel.add(showColumnCheckbox, gbc);
+            eyeThrowsColumnsPanel.add(showColumnCheckbox, gbc);
 
-            JComboBox<String> headerCombobox = newHeaderCombobox(columnData);
+            JComboBox<String> headerCombobox = newEyeThrowsHeaderCombobox(columnData);
             gbc.gridx = 2;
             gbc.anchor = GridBagConstraints.CENTER;
-            columnsPanel.add(headerCombobox, gbc);
+            eyeThrowsColumnsPanel.add(headerCombobox, gbc);
 
-            JButton moveUpButton = new JButton("Move up");
+            JButton moveUpButton = new JButton("Move left");
             gbc.gridx = 3;
             gbc.anchor = GridBagConstraints.CENTER;
             moveUpButton.addActionListener(a -> {
@@ -251,12 +292,12 @@ public class ConfigGUI extends JPanel {
                 settings.columnData.remove(idx);
                 settings.columnData.add(idx - 1, columnData);
                 updateGUI();
-                updateTestGUI();
+                updatePreview();
             });
             moveUpButton.setEnabled(gbc.gridy > 1);
-            columnsPanel.add(moveUpButton, gbc);
+            eyeThrowsColumnsPanel.add(moveUpButton, gbc);
 
-            JButton moveDownButton = new JButton("Move down");
+            JButton moveDownButton = new JButton("Move right");
             gbc.gridx = 4;
             gbc.anchor = GridBagConstraints.CENTER;
             moveDownButton.addActionListener(a -> {
@@ -264,19 +305,161 @@ public class ConfigGUI extends JPanel {
                 settings.columnData.remove(idx);
                 settings.columnData.add(idx + 1, columnData);
                 updateGUI();
-                updateTestGUI();
+                updatePreview();
             });
-            columnsPanel.add(moveDownButton, gbc);
+            eyeThrowsColumnsPanel.add(moveDownButton, gbc);
             moveDownButton.setEnabled(gbc.gridy < settings.columnData.size());
 
             gbc.gridy += 1;
         }
-
-        revalidate();
-        repaint();
     }
 
-    private JComboBox<String> newHeaderCombobox(CalcOverlaySettings.ColumnData columnData) {
+    private void setupAAColumnsPanel() {
+        AllAdvancementsSettings settings = CalcOverlaySettings.getInstance().aaSettings;
+
+        aaColumnsPanel.removeAll();
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        final int hGap = 5;
+        final int vGap = 5;
+        gbc.gridy = 0;
+
+        gbc.insets = new Insets(0, hGap, vGap, hGap);
+
+        JLabel showColumnLabel = new JLabel("<html>Show<br>column<html>");
+        showColumnLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        aaColumnsPanel.add(showColumnLabel, gbc);
+
+        JLabel showIconLabel = new JLabel("Header");
+        showIconLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 2;
+        gbc.anchor = GridBagConstraints.SOUTH;
+        aaColumnsPanel.add(showIconLabel, gbc);
+
+        gbc.gridy = 1;
+        gbc.insets = new Insets(vGap, 0, vGap, hGap);
+        for (AllAdvancementsSettings.ColumnData columnData : settings.columnData) {
+            JLabel columnNameLabel = new JLabel(columnData.getColumnType().getConfigDisplay());
+            gbc.gridx = 0;
+            gbc.anchor = GridBagConstraints.EAST;
+            aaColumnsPanel.add(columnNameLabel, gbc);
+
+            JCheckBox showColumnCheckbox = new JCheckBox();
+            showColumnCheckbox.setSelected(columnData.isVisible());
+            showColumnCheckbox.addActionListener(a -> {
+                columnData.setVisible(showColumnCheckbox.isSelected());
+                CalcOverlaySettings.save();
+                updatePreview();
+            });
+            gbc.gridx = 1;
+            gbc.anchor = GridBagConstraints.CENTER;
+            aaColumnsPanel.add(showColumnCheckbox, gbc);
+
+            JComboBox<String> headerCombobox = newAAHeaderCombobox(columnData);
+            gbc.gridx = 2;
+            gbc.anchor = GridBagConstraints.CENTER;
+            aaColumnsPanel.add(headerCombobox, gbc);
+
+            JButton moveUpButton = new JButton("Move left");
+            gbc.gridx = 3;
+            gbc.anchor = GridBagConstraints.CENTER;
+            moveUpButton.addActionListener(a -> {
+                int idx = settings.columnData.indexOf(columnData);
+                settings.columnData.remove(idx);
+                settings.columnData.add(idx - 1, columnData);
+                updateGUI();
+                updatePreview();
+            });
+            moveUpButton.setEnabled(gbc.gridy > 1);
+            aaColumnsPanel.add(moveUpButton, gbc);
+
+            JButton moveDownButton = new JButton("Move right");
+            gbc.gridx = 4;
+            gbc.anchor = GridBagConstraints.CENTER;
+            moveDownButton.addActionListener(a -> {
+                int idx = settings.columnData.indexOf(columnData);
+                settings.columnData.remove(idx);
+                settings.columnData.add(idx + 1, columnData);
+                updateGUI();
+                updatePreview();
+            });
+            aaColumnsPanel.add(moveDownButton, gbc);
+            moveDownButton.setEnabled(gbc.gridy < settings.columnData.size());
+
+            gbc.gridy += 1;
+        }
+    }
+
+    private void setupAARowsPanel() {
+        AllAdvancementsSettings settings = CalcOverlaySettings.getInstance().aaSettings;
+
+        aaRowsPanel.removeAll();
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        final int hGap = 5;
+        final int vGap = 5;
+        gbc.gridy = 0;
+
+        gbc.insets = new Insets(0, hGap, vGap, hGap);
+
+        JLabel showRowLabel = new JLabel("<html>Show<br>row<html>");
+        showRowLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 1;
+        gbc.anchor = GridBagConstraints.CENTER;
+        aaRowsPanel.add(showRowLabel, gbc);
+
+        gbc.gridy = 1;
+        gbc.insets = new Insets(vGap, 0, vGap, hGap);
+        for (AllAdvancementsSettings.RowData rowData : settings.rowData) {
+            JLabel rowNameLabel = new JLabel(rowData.getRowType().getConfigDisplay());
+            gbc.gridx = 0;
+            gbc.anchor = GridBagConstraints.EAST;
+            aaRowsPanel.add(rowNameLabel, gbc);
+
+            JCheckBox showRowCheckbox = new JCheckBox();
+            showRowCheckbox.setSelected(rowData.isVisible());
+            showRowCheckbox.addActionListener(a -> {
+                rowData.setVisible(showRowCheckbox.isSelected());
+                CalcOverlaySettings.save();
+                updatePreview();
+            });
+            gbc.gridx = 1;
+            gbc.anchor = GridBagConstraints.CENTER;
+            aaRowsPanel.add(showRowCheckbox, gbc);
+
+            JButton moveUpButton = new JButton("Move up");
+            gbc.gridx = 2;
+            gbc.anchor = GridBagConstraints.CENTER;
+            moveUpButton.addActionListener(a -> {
+                int idx = settings.rowData.indexOf(rowData);
+                settings.rowData.remove(idx);
+                settings.rowData.add(idx - 1, rowData);
+                updateGUI();
+                updatePreview();
+            });
+            moveUpButton.setEnabled(gbc.gridy > 1);
+            aaRowsPanel.add(moveUpButton, gbc);
+
+            JButton moveDownButton = new JButton("Move down");
+            gbc.gridx = 3;
+            gbc.anchor = GridBagConstraints.CENTER;
+            moveDownButton.addActionListener(a -> {
+                int idx = settings.rowData.indexOf(rowData);
+                settings.rowData.remove(idx);
+                settings.rowData.add(idx + 1, rowData);
+                updateGUI();
+                updatePreview();
+            });
+            moveDownButton.setEnabled(gbc.gridy < settings.rowData.size());
+            aaRowsPanel.add(moveDownButton, gbc);
+
+            gbc.gridy += 1;
+        }
+    }
+
+    private JComboBox<String> newEyeThrowsHeaderCombobox(CalcOverlaySettings.ColumnData columnData) {
         JComboBox<String> headerCombobox = new JComboBox<>();
         for (CalcOverlaySettings.HeaderRow value : CalcOverlaySettings.HeaderRow.values()) {
             headerCombobox.addItem(value.getDisplay());
@@ -285,7 +468,28 @@ public class ConfigGUI extends JPanel {
         headerCombobox.addActionListener(a -> {
             columnData.setHeaderRow(CalcOverlaySettings.HeaderRow.match((String) headerCombobox.getSelectedItem()));
             CalcOverlaySettings.save();
-            updateTestGUI();
+            updatePreview();
+        });
+        return headerCombobox;
+    }
+
+    private JComboBox<String> newAAHeaderCombobox(AllAdvancementsSettings.ColumnData columnData) {
+        JComboBox<String> headerCombobox = new JComboBox<>();
+        if (columnData.getColumnType() == AllAdvancementsSettings.ColumnType.ICONS) {
+            headerCombobox.addItem(AllAdvancementsSettings.HeaderRow.NOTHING.getDisplay());
+            headerCombobox.setSelectedItem(AllAdvancementsSettings.HeaderRow.NOTHING.getDisplay());
+            headerCombobox.setEnabled(false);
+            return headerCombobox;
+        }
+
+        for (AllAdvancementsSettings.HeaderRow value : AllAdvancementsSettings.HeaderRow.values()) {
+            headerCombobox.addItem(value.getDisplay());
+        }
+        headerCombobox.setSelectedItem(columnData.getHeaderRow().getDisplay());
+        headerCombobox.addActionListener(a -> {
+            columnData.setHeaderRow(AllAdvancementsSettings.HeaderRow.match((String) headerCombobox.getSelectedItem()));
+            CalcOverlaySettings.save();
+            updatePreview();
         });
         return headerCombobox;
     }
@@ -306,97 +510,135 @@ public class ConfigGUI extends JPanel {
      */
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
-        mainPanel.setLayout(new GridLayoutManager(6, 1, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.setLayout(new GridLayoutManager(5, 1, new Insets(0, 0, 0, 0), -1, -1));
         mainPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         enabledCheckbox = new JCheckBox();
         enabledCheckbox.setText("Enable overlay");
-        mainPanel.add(enabledCheckbox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_NORTHWEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        enabledPanel = new JPanel();
-        enabledPanel.setLayout(new GridLayoutManager(8, 1, new Insets(0, 0, 0, 0), -1, -1));
-        mainPanel.add(enabledPanel, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_NORTH, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        mainPanel.add(enabledCheckbox, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final JPanel panel1 = new JPanel();
-        panel1.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        enabledPanel.add(panel1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        overlayPositionCombobox = new JComboBox();
-        panel1.add(overlayPositionCombobox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 10, 0), -1, -1));
+        mainPanel.add(panel1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JLabel label1 = new JLabel();
-        label1.setText("Overlay position:");
-        label1.setToolTipText("<html>Overlay position in the image. Image is always the same size,<br>and this setting lets you choose which corner overlay anchors to.</html>");
+        label1.setText("OBS Script:");
         panel1.add(label1, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel2 = new JPanel();
-        panel2.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        enabledPanel.add(panel2, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JLabel label2 = new JLabel();
-        label2.setText("Overworld coords:");
-        panel2.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        overworldCoordsTypeCombobox = new JComboBox();
-        panel2.add(overworldCoordsTypeCombobox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        showAngleDirectionCheckbox = new JCheckBox();
-        showAngleDirectionCheckbox.setText("Show angle direction");
-        enabledPanel.add(showAngleDirectionCheckbox, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        showCoordsBasedOnCheckBox = new JCheckBox();
-        showCoordsBasedOnCheckBox.setText("Show coords based on dimension");
-        showCoordsBasedOnCheckBox.setToolTipText("<html>\nIf enabled, only overworld coords will be shown while you're in overworld,<br>and nether coords will be hidden.<br> Once you F3+C in the nether, only nether coords will be shown,<br>and overworld coords will be hidden.\n<br><br>\nIf disabled, both coords will always be shown.\n</html>");
-        enabledPanel.add(showCoordsBasedOnCheckBox, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(1, 1, new Insets(5, 5, 5, 5), -1, -1));
-        enabledPanel.add(panel3, new GridConstraints(7, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panel3.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        columnsPanel = new JPanel();
-        columnsPanel.setLayout(new GridBagLayout());
-        panel3.add(columnsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JPanel panel4 = new JPanel();
-        panel4.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
-        enabledPanel.add(panel4, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        shownMeasurementsSpinner = new JSpinner();
-        panel4.add(shownMeasurementsSpinner, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label3 = new JLabel();
-        label3.setText("Shown measurements:");
-        panel4.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel5 = new JPanel();
-        panel5.setLayout(new GridLayoutManager(2, 1, new Insets(0, 0, 0, 0), -1, -1));
-        enabledPanel.add(panel5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panel5.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(0, 0, 7, 0), null, TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        showDummyMeasurementButton = new JButton();
-        Font showDummyMeasurementButtonFont = this.$$$getFont$$$(null, -1, 16, showDummyMeasurementButton.getFont());
-        if (showDummyMeasurementButtonFont != null) showDummyMeasurementButton.setFont(showDummyMeasurementButtonFont);
-        showDummyMeasurementButton.setLabel("Preview Overlay");
-        showDummyMeasurementButton.setText("Preview Overlay");
-        panel5.add(showDummyMeasurementButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JLabel label4 = new JLabel();
-        Font label4Font = this.$$$getFont$$$(null, Font.BOLD, 20, label4.getFont());
-        if (label4Font != null) label4.setFont(label4Font);
-        label4.setText("Overlay Settings");
-        panel5.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel6 = new JPanel();
-        panel6.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-        enabledPanel.add(panel6, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JLabel label5 = new JLabel();
-        label5.setText("Font:");
-        panel6.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        changeFontButton = new JButton();
-        changeFontButton.setText("Change font");
-        panel6.add(changeFontButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        fontLabel = new JLabel();
-        fontLabel.setText("<font>");
-        panel6.add(fontLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JSeparator separator1 = new JSeparator();
-        mainPanel.add(separator1, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final JPanel panel7 = new JPanel();
-        panel7.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-        mainPanel.add(panel7, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final JLabel label6 = new JLabel();
-        label6.setText("Path to OBS Script:");
-        panel7.add(label6, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         copyScriptPathButton = new JButton();
         copyScriptPathButton.setText("Copy Script Path");
-        panel7.add(copyScriptPathButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(copyScriptPathButton, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         OBSScriptSetupButton = new JButton();
         OBSScriptSetupButton.setText("OBS Script Setup");
-        panel7.add(OBSScriptSetupButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        panel1.add(OBSScriptSetupButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         checkForUpdatesButton = new JButton();
         checkForUpdatesButton.setText("Check for updates");
-        mainPanel.add(checkForUpdatesButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        mainPanel.add(checkForUpdatesButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        enabledPanel = new JPanel();
+        enabledPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
+        mainPanel.add(enabledPanel, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        enabledPanel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEmptyBorder(), "Overlay Config", TitledBorder.LEFT, TitledBorder.TOP, this.$$$getFont$$$(null, Font.BOLD, 14, enabledPanel.getFont()), null));
+        settingsPane = new JTabbedPane();
+        settingsPane.setTabLayoutPolicy(0);
+        settingsPane.setTabPlacement(1);
+        enabledPanel.add(settingsPane, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(200, 420), null, 0, false));
+        final JScrollPane scrollPane1 = new JScrollPane();
+        scrollPane1.setHorizontalScrollBarPolicy(31);
+        settingsPane.addTab("General", scrollPane1);
+        final JPanel panel2 = new JPanel();
+        panel2.setLayout(new GridLayoutManager(3, 1, new Insets(5, 5, 5, 5), -1, -1));
+        scrollPane1.setViewportView(panel2);
+        final JPanel panel3 = new JPanel();
+        panel3.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel2.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label2 = new JLabel();
+        label2.setText("Font:");
+        panel3.add(label2, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        changeFontButton = new JButton();
+        changeFontButton.setText("Change font");
+        panel3.add(changeFontButton, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        fontLabel = new JLabel();
+        fontLabel.setText("<font>");
+        panel3.add(fontLabel, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel4 = new JPanel();
+        panel4.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel2.add(panel4, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        overlayPositionCombobox = new JComboBox();
+        panel4.add(overlayPositionCombobox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label3 = new JLabel();
+        label3.setText("Overlay position:");
+        label3.setToolTipText("<html>Overlay position in the image. Image is always the same size,<br>and this setting lets you choose which corner overlay anchors to.</html>");
+        panel4.add(label3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(89, 31), null, 0, false));
+        final Spacer spacer1 = new Spacer();
+        panel2.add(spacer1, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JScrollPane scrollPane2 = new JScrollPane();
+        scrollPane2.setHorizontalScrollBarPolicy(31);
+        settingsPane.addTab("Eye Throws Overlay", scrollPane2);
+        final JPanel panel5 = new JPanel();
+        panel5.setLayout(new GridLayoutManager(7, 1, new Insets(5, 5, 5, 5), -1, -1));
+        scrollPane2.setViewportView(panel5);
+        final JPanel panel6 = new JPanel();
+        panel6.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel5.add(panel6, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        shownMeasurementsSpinner = new JSpinner();
+        panel6.add(shownMeasurementsSpinner, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JLabel label4 = new JLabel();
+        label4.setText("Shown measurements:");
+        panel6.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel7 = new JPanel();
+        panel7.setLayout(new GridLayoutManager(1, 2, new Insets(0, 0, 0, 0), -1, -1));
+        panel5.add(panel7, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JLabel label5 = new JLabel();
+        label5.setText("Overworld coords:");
+        panel7.add(label5, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        overworldCoordsTypeCombobox = new JComboBox();
+        panel7.add(overworldCoordsTypeCombobox, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        showAngleDirectionCheckbox = new JCheckBox();
+        showAngleDirectionCheckbox.setText("Show angle direction");
+        panel5.add(showAngleDirectionCheckbox, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        showCoordsBasedOnCheckbox = new JCheckBox();
+        showCoordsBasedOnCheckbox.setText("Show Overworld/Nether coords based on dimension");
+        showCoordsBasedOnCheckbox.setToolTipText("<html>\nIf enabled, only overworld coords will be shown while you're in overworld,<br>and nether coords will be hidden.<br> Once you F3+C in the nether, only nether coords will be shown,<br>and overworld coords will be hidden.\n<br><br>\nIf disabled, both coords will always be shown.\n</html>");
+        panel5.add(showCoordsBasedOnCheckbox, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JPanel panel8 = new JPanel();
+        panel8.setLayout(new GridLayoutManager(1, 1, new Insets(5, 5, 5, 5), -1, -1));
+        panel5.add(panel8, new GridConstraints(5, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel8.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Columns", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        eyeThrowsColumnsPanel = new JPanel();
+        eyeThrowsColumnsPanel.setLayout(new GridBagLayout());
+        panel8.add(eyeThrowsColumnsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        previewEyeThrowsOverlayButton = new JButton();
+        previewEyeThrowsOverlayButton.setLabel("Preview Eye Throws Overlay");
+        previewEyeThrowsOverlayButton.setText("Preview Eye Throws Overlay");
+        panel5.add(previewEyeThrowsOverlayButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer2 = new Spacer();
+        panel5.add(spacer2, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JScrollPane scrollPane3 = new JScrollPane();
+        scrollPane3.setHorizontalScrollBarPolicy(31);
+        settingsPane.addTab("All Advancements Overlay", scrollPane3);
+        final JPanel panel9 = new JPanel();
+        panel9.setLayout(new GridLayoutManager(3, 3, new Insets(5, 5, 5, 5), -1, -1));
+        scrollPane3.setViewportView(panel9);
+        previewAAOverlayButton = new JButton();
+        previewAAOverlayButton.setLabel("Preview All Advancements Overlay");
+        previewAAOverlayButton.setText("Preview All Advancements Overlay");
+        panel9.add(previewAAOverlayButton, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer3 = new Spacer();
+        panel9.add(spacer3, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JPanel panel10 = new JPanel();
+        panel10.setLayout(new GridLayoutManager(1, 1, new Insets(5, 5, 5, 5), -1, -1));
+        panel9.add(panel10, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel10.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Columns", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        aaColumnsPanel = new JPanel();
+        aaColumnsPanel.setLayout(new GridBagLayout());
+        panel10.add(aaColumnsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JPanel panel11 = new JPanel();
+        panel11.setLayout(new GridLayoutManager(1, 1, new Insets(5, 5, 5, 5), -1, -1));
+        panel9.add(panel11, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel11.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Rows", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        aaRowsPanel = new JPanel();
+        aaRowsPanel.setLayout(new GridBagLayout());
+        panel11.add(aaRowsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final Spacer spacer4 = new Spacer();
+        panel9.add(spacer4, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final Spacer spacer5 = new Spacer();
+        mainPanel.add(spacer5, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**
