@@ -31,6 +31,8 @@ public class CalcOverlaySettings {
     @Getter
     private static CalcOverlaySettings instance = null;
 
+    /************************** General settings *****************************/
+
     @Expose @SerializedName("calc overlay enabled")
     public boolean calcOverlayEnabled;
 
@@ -39,6 +41,16 @@ public class CalcOverlaySettings {
 
     @Expose @SerializedName(value = "overlay position", alternate = {"overlay overlayPosition"})
     public Position overlayPosition;
+
+    @Expose @SerializedName("font")
+    public FontData fontData = new FontData("Calibri", Font.PLAIN, 48);
+
+    /* ********************************************************************* */
+
+
+
+    /****************** Eye throws (stronghold endpoint) *********************/
+    /* For now, I'm leaving it here, even though it should be its own class. */
 
     @Expose @SerializedName("columns")
     public List<ColumnData> columnData;
@@ -55,8 +67,16 @@ public class CalcOverlaySettings {
     @Expose @SerializedName("shown measurements")
     public int shownMeasurements = -1;
 
-    @Expose @SerializedName("font")
-    public FontData fontData = new FontData("Calibri", Font.PLAIN, 48);
+    /* ********************************************************************* */
+
+
+
+    /********** All Advancements (all-advancements endpoint) *****************/
+
+    @Expose @SerializedName("all advancements")
+    public AllAdvancementsSettings aaSettings;
+
+    /* ********************************************************************* */
 
     public static void load() {
         if (!Files.exists(SETTINGS_PATH)) {
@@ -97,6 +117,7 @@ public class CalcOverlaySettings {
         instance.onlyShowCurrentDimensionCoords = false;
         instance.overworldCoords = OverworldsCoords.CHUNK;
         instance.shownMeasurements = 3;
+        instance.aaSettings = AllAdvancementsSettings.loadDefaultSettings();
     }
 
     @AllArgsConstructor @Getter
