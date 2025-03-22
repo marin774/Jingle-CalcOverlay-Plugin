@@ -2,8 +2,10 @@ package me.marin.calcoverlay;
 
 import com.google.common.io.Resources;
 import me.marin.calcoverlay.gui.ConfigGUI;
+import me.marin.calcoverlay.io.AllAdvancementsSettings;
 import me.marin.calcoverlay.io.CalcOverlaySettings;
 import me.marin.calcoverlay.ninjabrainapi.NinjabrainBotEventSubscriber;
+import me.marin.calcoverlay.util.CalcOverlayUtil;
 import me.marin.calcoverlay.util.OverlayUtil;
 import me.marin.calcoverlay.util.UpdateUtil;
 import me.marin.calcoverlay.util.VersionUtil;
@@ -19,6 +21,7 @@ import java.io.IOException;
 import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 import java.util.Objects;
 
 import static me.marin.calcoverlay.util.VersionUtil.CURRENT_VERSION;
@@ -86,6 +89,24 @@ public class CalcOverlay {
                     cd.setHeaderRow(CalcOverlaySettings.HeaderRow.NOTHING);
                 }
             }
+        }
+
+        if (fromVersion.isOlderThan(version("2.0.0"))) {
+            CalcOverlaySettings.getInstance().aaSettings = AllAdvancementsSettings.loadDefaultSettings();
+
+            Jingle.log(Level.INFO, "\n\n\t\tCALC OVERLAY v2.0.0 UPDATE\n\n" +
+                    "\tCalcOverlay v2.0.0 now uses new 'Calc Overlay' OBS source.\n" +
+                    "\tYou should no longer use an Image source in OBS.\n\n" +
+                    "\tAdd the script to your OBS (script path can be found in Plugins -> Calc Overlay), then add 'Calc Overlay' source to your scene in OBS.\n\n" +
+                    "\tFor a step-by-step setup, go here: https://github.com/marin774/Jingle-CalcOverlay-Plugin/blob/main/setup.md#setup-obs-script--overlay\n\n.");
+
+            CalcOverlayUtil.runAsync("notify", () -> {
+                JOptionPane.showMessageDialog(null,
+                        "CalcOverlay v2.0.0 now uses new 'Calc Overlay' OBS source.\n" +
+                                "You should no longer use an Image source in OBS.\n\n" +
+                                "** Check Jingle Logs or Github for more information. **",
+                        "CalcOverlay v2.0.0", JOptionPane.INFORMATION_MESSAGE);
+            });
         }
 
         CalcOverlaySettings.getInstance().version = CURRENT_VERSION.toString();
