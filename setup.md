@@ -46,13 +46,14 @@ There is a lot of configuration you can do. I'll go over each setting:
 
 ### General
 
-![image](https://github.com/user-attachments/assets/b566b614-b00e-455c-b65e-13944aef6f9a)
+![image](https://github.com/user-attachments/assets/51819444-417c-412f-98ae-2bce7f9df82b)
 
 - **Font** - customize the font, needs a pretty large size (44pt by default).
   > NOTE! <br>
   > If you can't find an installed font, make sure to install the font for \*all users\*!<br>
   > Right-click the font file -> Install for all users.
 - **Overlay position** - positions the overlay within the image (image is always the same size, so this setting will anchor it to a corner)
+- **Outline width** - controls the width of the outline around all text, set to 0 to disable outline.
 
 ---
 
