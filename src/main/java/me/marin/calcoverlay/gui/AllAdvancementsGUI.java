@@ -26,13 +26,11 @@ public class AllAdvancementsGUI {
     public AllAdvancementsGUI(Map<AllAdvancementsSettings.RowType, Position> positions) {
         $$$setupUI$$$();
 
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.gridy = 0;
-        gbc.insets = new Insets(18, 18, 5, 18);
-
         AllAdvancementsSettings settings = CalcOverlaySettings.getInstance().aaSettings;
 
-        gbc.gridx = 0;
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(18, 18, 5, 18);
+
         // Icons
         for (AllAdvancementsSettings.ColumnData columnData : settings.columnData) {
             if (columnData.isVisible()) {
@@ -96,7 +94,7 @@ public class AllAdvancementsGUI {
     }
 
     private JLabel setupJLabel(String text) {
-        JLabel jLabel = new JLabel();
+        JLabel jLabel = new OutlinedJLabel();
         jLabel.setText(text);
         jLabel.setFont(CalcOverlayUtil.getFont());
         jLabel.setForeground(Color.WHITE);

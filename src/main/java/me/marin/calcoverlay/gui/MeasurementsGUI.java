@@ -138,7 +138,7 @@ public class MeasurementsGUI {
     }
 
     private JLabel setupJLabel(String text) {
-        JLabel jLabel = new JLabel();
+        JLabel jLabel = new OutlinedJLabel();
         jLabel.setText(text);
         jLabel.setFont(CalcOverlayUtil.getFont());
         jLabel.setForeground(Color.WHITE);

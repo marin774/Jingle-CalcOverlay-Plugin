@@ -43,7 +43,10 @@ public class CalcOverlaySettings {
     public Position overlayPosition;
 
     @Expose @SerializedName("font")
-    public FontData fontData = new FontData("Calibri", Font.PLAIN, 48);
+    public FontData fontData;
+
+    @Expose @SerializedName("outline width")
+    public int outlineWidth;
 
     /* ********************************************************************* */
 
@@ -118,6 +121,7 @@ public class CalcOverlaySettings {
         instance.overworldCoords = OverworldsCoords.CHUNK;
         instance.shownMeasurements = 3;
         instance.aaSettings = AllAdvancementsSettings.loadDefaultSettings();
+        instance.outlineWidth = 3;
     }
 
     @AllArgsConstructor @Getter
@@ -156,13 +160,11 @@ public class CalcOverlaySettings {
     public static class FontData {
         @Expose @SerializedName("name")
         private final String name;
-        @Expose @SerializedName("style")
-        private final int style;
         @Expose @SerializedName("size")
         private final int size;
 
         public Font toFont() {
-            return new Font(name, style, size);
+            return new Font(name, Font.PLAIN, size);
         }
     }
 

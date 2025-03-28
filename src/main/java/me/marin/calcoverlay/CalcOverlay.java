@@ -93,6 +93,10 @@ public class CalcOverlay {
 
         if (fromVersion.isOlderThan(version("2.0.0"))) {
             CalcOverlaySettings.getInstance().aaSettings = AllAdvancementsSettings.loadDefaultSettings();
+            CalcOverlaySettings.getInstance().outlineWidth = 3;
+            if (CalcOverlaySettings.getInstance().fontData == null) {
+                CalcOverlaySettings.getInstance().fontData = new CalcOverlaySettings.FontData("Calibri", 48);
+            }
 
             Jingle.log(Level.INFO, "\n\n\t\tCALC OVERLAY v2.0.0 UPDATE\n\n" +
                     "\tCalcOverlay v2.0.0 now uses new 'Calc Overlay' OBS source.\n" +

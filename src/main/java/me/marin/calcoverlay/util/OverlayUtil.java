@@ -186,8 +186,6 @@ public class OverlayUtil {
         positions.put(AllAdvancementsSettings.RowType.OUTPOST,  gson.fromJson(aaResponse.get("outpost"), Position.class));
         positions.put(AllAdvancementsSettings.RowType.MONUMENT,  gson.fromJson(aaResponse.get("monument"), Position.class));
 
-        CalcOverlay.log(Level.DEBUG, positions.toString());
-
         return OverlayUtil.allAdvancements(positions);
     }
 
