@@ -4,6 +4,7 @@ import me.marin.calcoverlay.io.CalcOverlaySettings;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.font.GlyphVector;
 import java.awt.font.TextLayout;
 
 public class OutlinedJLabel extends JLabel {
@@ -15,31 +16,35 @@ public class OutlinedJLabel extends JLabel {
         TextLayout textLayout = new TextLayout(this.getText(), this.getFont(), g2d.getFontRenderContext());
         Shape outline = textLayout.getOutline(null);
 
-        Color color = g2d.getColor();
-        g2d.setColor(Color.BLACK);
+        Paint paint = g2d.getPaint();
 
         Stroke stroke = g2d.getStroke();
-        g2d.setStroke(new BasicStroke(CalcOverlaySettings.getInstance().outlineWidth));
+        g2d.setStroke(new BasicStroke(CalcOverlaySettings.getInstance().outlineWidth, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
 
         // idk why 8, but it works
         g2d.translate(0, 8 + this.getFont().getStringBounds(this.getText(), g2d.getFontRenderContext()).getHeight() / 2);
 
-        expandClip(g2d, CalcOverlaySettings.getInstance().outlineWidth);
-
-        // Anti aliasing
         g2d.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2d.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_QUALITY);
 
-        // Draw outline
-        g2d.draw(outline);
+        expandClip(g2d, CalcOverlaySettings.getInstance().outlineWidth);
 
-        // Fill inside
-        g2d.setColor(this.getForeground());
-        g2d.fill(outline);
+        GlyphVector glyphVector = this.getFont().createGlyphVector(g2d.getFontRenderContext(), this.getText());
+        for (int i = 0; i < this.getText().length(); i++) {
+            Shape glyphOutline = glyphVector.getGlyphOutline(i);
+
+            // Draw black outline
+            g2d.setPaint(Color.BLACK);
+            g2d.draw(glyphOutline);
+
+            // Fill inside
+            g2d.setPaint(this.getForeground());
+            g2d.fill(outline);
+        }
 
         // Set original values
         g2d.setStroke(stroke);
-        g2d.setColor(color);
+        g2d.setPaint(paint);
     }
 
     private static void expandClip(Graphics2D g2d, int width) {
