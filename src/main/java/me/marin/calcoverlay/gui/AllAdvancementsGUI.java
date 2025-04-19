@@ -31,7 +31,9 @@ public class AllAdvancementsGUI {
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(18, 18, 5, 18);
 
-        // Icons
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        // Header row
         for (AllAdvancementsSettings.ColumnData columnData : settings.columnData) {
             if (columnData.isVisible()) {
                 switch (columnData.getHeaderRow()) {
