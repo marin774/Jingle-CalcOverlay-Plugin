@@ -4,7 +4,7 @@ import com.google.gson.*;
 import me.marin.calcoverlay.CalcOverlay;
 import me.marin.calcoverlay.gui.AllAdvancementsGUI;
 import me.marin.calcoverlay.gui.ConfigGUI;
-import me.marin.calcoverlay.gui.HomePortalGUI;
+import me.marin.calcoverlay.gui.BlindCoordsGUI;
 import me.marin.calcoverlay.gui.MeasurementsGUI;
 import me.marin.calcoverlay.io.AllAdvancementsSettings;
 import me.marin.calcoverlay.io.CalcOverlaySettings;
@@ -44,6 +44,8 @@ public class OverlayUtil {
     public static Image spawnIconImage = null;
     public static Image strongholdIconImage = null;
 
+    public static Color NETHER_COORDS_COLOR = new Color(0xFFB4B4);
+
     public static void loadImagesAndStyles() {
         try {
             homeIconImage = ImageIO.read(Objects.requireNonNull(OverlayUtil.class.getResource("/icons/home.png")));
@@ -62,8 +64,8 @@ public class OverlayUtil {
         }
     }
 
-    public static JPanel homePortal(double xNether, double zNether, String evauluation, double probability) {
-        return new HomePortalGUI(
+    public static JPanel blindCoords(double xNether, double zNether, String evauluation, double probability) {
+        return new BlindCoordsGUI(
                 (int) Math.floor(xNether),
                 (int) Math.floor(zNether),
                 evauluation,
@@ -132,9 +134,10 @@ public class OverlayUtil {
             case "NONE":
             case "FAILED":
                 return OverlayUtil.empty();
-            // case "BLIND":
-            //     getPanelForBlindCoords();
-            //     break;
+            case "BLIND":
+                JsonObject bcResponse = NINJABRAIN_BOT_EVENT_SUBSCRIBER.getSseClient().get("blind");
+
+                return getPanelForBlindCoords(bcResponse);
             case "TRIANGULATION":
                 JsonArray predictions = response.get("predictions").getAsJsonArray();
 
@@ -162,6 +165,8 @@ public class OverlayUtil {
                 return getPanelForStronghold(previewType.getResponse());
             case ALL_ADVANCEMENTS:
                 return getPanelForAllAdvancements(previewType.getResponse());
+            case BLIND_COORDS:
+                return getPanelForBlindCoords(previewType.getResponse());
         }
     }
 
@@ -189,24 +194,23 @@ public class OverlayUtil {
         return OverlayUtil.allAdvancements(positions);
     }
 
-    public static JPanel getPanelForBlindCoords() {
-        JsonObject response = NINJABRAIN_BOT_EVENT_SUBSCRIBER.getSseClient().get("blind");
-        if (response == null) {
+    public static JPanel getPanelForBlindCoords(JsonObject bcResponse) {
+        if (bcResponse == null) {
             return OverlayUtil.empty();
         }
 
-        boolean isBlindModeEnabled = response.get("isBlindModeEnabled").getAsBoolean();
+        boolean isBlindModeEnabled = bcResponse.get("isBlindModeEnabled").getAsBoolean();
         if (!isBlindModeEnabled) {
             return OverlayUtil.empty();
         }
-        JsonObject blindResult = response.get("blindResult").getAsJsonObject();
+        JsonObject blindResult = bcResponse.get("blindResult").getAsJsonObject();
 
         double xNether = blindResult.get("xInNether").getAsDouble();
         double zNether = blindResult.get("zInNether").getAsDouble();
         String evaluation = blindResult.get("evaluation").getAsString();
         double probability = blindResult.get("highrollProbability").getAsDouble();
 
-        return OverlayUtil.homePortal(xNether, zNether, evaluation, probability);
+        return OverlayUtil.blindCoords(xNether, zNether, evaluation, probability);
     }
 
 

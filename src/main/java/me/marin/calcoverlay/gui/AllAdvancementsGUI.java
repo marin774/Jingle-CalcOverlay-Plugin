@@ -29,7 +29,7 @@ public class AllAdvancementsGUI {
         AllAdvancementsSettings settings = CalcOverlaySettings.getInstance().aaSettings;
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(18, 18, 5, 18);
+        gbc.insets = new Insets(5, 20, 5, 20);
 
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -38,7 +38,7 @@ public class AllAdvancementsGUI {
             if (columnData.isVisible()) {
                 switch (columnData.getHeaderRow()) {
                     case TEXT:
-                        JLabel text = setupJLabel(columnData.getColumnType().getOverlayDisplay());
+                        JLabel text = CalcOverlayUtil.setupJLabel(columnData.getColumnType().getOverlayDisplay());
                         gbc.anchor = GridBagConstraints.SOUTH;
                         allAdvancementsPanel.add(text, gbc);
                 }
@@ -69,20 +69,20 @@ public class AllAdvancementsGUI {
                             allAdvancementsPanel.add(iconLabel, gbc);
                             break;
                         case LOCATION:
-                            JLabel locationLabel = setupJLabel(String.format("(%d, %d)", position.getXInOverworld(), position.getZInOverworld()));
+                            JLabel locationLabel = CalcOverlayUtil.setupJLabel(String.format("(%d, %d)", position.getXInOverworld(), position.getZInOverworld()));
                             gbc.anchor = GridBagConstraints.CENTER;
                             gbc.insets = new Insets(gbc.gridy == 1 ? vGap : 0, hGap, vGap, hGap);
                             allAdvancementsPanel.add(locationLabel, gbc);
                             break;
                         case NETHER_COORDS:
-                            JLabel netherCoordsLabel = setupJLabel(String.format("(%d, %d)", Math.round(position.getXInOverworld() / 8.), Math.round(position.getZInOverworld() / 8.)));
+                            JLabel netherCoordsLabel = CalcOverlayUtil.setupJLabel(String.format("(%d, %d)", Math.round(position.getXInOverworld() / 8.), Math.round(position.getZInOverworld() / 8.)));
                             netherCoordsLabel.setForeground(new Color(0xFFB4B4));
                             gbc.insets = new Insets(gbc.gridy == 1 ? vGap : 0, hGap, vGap, hGap);
                             gbc.anchor = GridBagConstraints.CENTER;
                             allAdvancementsPanel.add(netherCoordsLabel, gbc);
                             break;
                         case ANGLE:
-                            JLabel angleLabel = setupJLabel(String.format(Locale.US, "%.1f", position.getTravelAngle()));
+                            JLabel angleLabel = CalcOverlayUtil.setupJLabel(String.format(Locale.US, "%.1f", position.getTravelAngle()));
                             gbc.insets = new Insets(gbc.gridy == 1 ? vGap : 0, hGap, vGap, hGap);
                             gbc.anchor = GridBagConstraints.EAST;
                             allAdvancementsPanel.add(angleLabel, gbc);
@@ -93,14 +93,6 @@ public class AllAdvancementsGUI {
             }
             gbc.gridy += 1;
         }
-    }
-
-    private JLabel setupJLabel(String text) {
-        JLabel jLabel = new OutlinedJLabel();
-        jLabel.setText(text);
-        jLabel.setFont(CalcOverlayUtil.getFont());
-        jLabel.setForeground(Color.WHITE);
-        return jLabel;
     }
 
     /**

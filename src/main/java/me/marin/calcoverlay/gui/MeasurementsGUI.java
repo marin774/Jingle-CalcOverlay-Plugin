@@ -13,6 +13,8 @@ import java.awt.*;
 import java.util.List;
 import java.util.Locale;
 
+import static me.marin.calcoverlay.util.OverlayUtil.NETHER_COORDS_COLOR;
+
 public class MeasurementsGUI {
 
     @Getter
@@ -24,7 +26,7 @@ public class MeasurementsGUI {
 
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridy = 0;
-        gbc.insets = new Insets(18, 18, 5, 18);
+        gbc.insets = new Insets(5, 20, 5, 20);
 
         gbc.gridx = 0;
         // Icons
@@ -38,7 +40,7 @@ public class MeasurementsGUI {
                         measurementsPanel.add(overworldIcon, gbc);
                         break;
                     case TEXT:
-                        JLabel text = setupJLabel(columnData.getColumnType().getOverlayDisplay(CalcOverlaySettings.getInstance().overworldCoords));
+                        JLabel text = CalcOverlayUtil.setupJLabel(columnData.getColumnType().getOverlayDisplay(CalcOverlaySettings.getInstance().overworldCoords));
                         gbc.anchor = GridBagConstraints.SOUTH;
                         measurementsPanel.add(text, gbc);
                 }
@@ -75,13 +77,13 @@ public class MeasurementsGUI {
                                     text = "(" + (prediction.getChunkX() * 16 + 8) + ", " + (prediction.getChunkZ() * 16 + 8) + ")";
                                     break;
                             }
-                            JLabel coords = setupJLabel(text);
+                            JLabel coords = CalcOverlayUtil.setupJLabel(text);
                             gbc.insets = new Insets(gbc.gridy == 1 ? vGap : 0, hGap, vGap, hGap);
                             gbc.anchor = GridBagConstraints.CENTER;
                             measurementsPanel.add(coords, gbc);
                             break;
                         case CERTAINTY:
-                            JLabel certainty = setupJLabel(String.format(Locale.US, "%.1f%%", prediction.getCertainty() * 100));
+                            JLabel certainty = CalcOverlayUtil.setupJLabel(String.format(Locale.US, "%.1f%%", prediction.getCertainty() * 100));
                             certainty.setMinimumSize(new Dimension(400, certainty.getHeight()));
                             certainty.setForeground(OverlayUtil.getColor(prediction.getCertainty()));
                             gbc.anchor = GridBagConstraints.CENTER;
@@ -89,14 +91,14 @@ public class MeasurementsGUI {
                             measurementsPanel.add(certainty, gbc);
                             break;
                         case DISTANCE:
-                            JLabel distance = setupJLabel(String.valueOf(displayedDistance));
+                            JLabel distance = CalcOverlayUtil.setupJLabel(String.valueOf(displayedDistance));
                             gbc.anchor = GridBagConstraints.CENTER;
                             gbc.insets = new Insets(gbc.gridy == 1 ? vGap : 0, hGap, vGap, hGap);
                             measurementsPanel.add(distance, gbc);
                             break;
                         case NETHER_COORDS:
-                            JLabel netherCoords = setupJLabel("(" + prediction.getChunkX() * 2 + ", " + prediction.getChunkZ() * 2 + ")");
-                            netherCoords.setForeground(new Color(0xFFB4B4));
+                            JLabel netherCoords = CalcOverlayUtil.setupJLabel("(" + prediction.getChunkX() * 2 + ", " + prediction.getChunkZ() * 2 + ")");
+                            netherCoords.setForeground(NETHER_COORDS_COLOR);
                             gbc.insets = new Insets(gbc.gridy == 1 ? vGap : 0, hGap, vGap, hGap);
                             gbc.anchor = GridBagConstraints.CENTER;
                             measurementsPanel.add(netherCoords, gbc);
@@ -107,7 +109,7 @@ public class MeasurementsGUI {
                             layout.setHgap(12);
                             anglePanel.setLayout(layout);
 
-                            JLabel angleLabel = setupJLabel(String.format(Locale.US, "%.2f", angleToCoords.getActualAngle()));
+                            JLabel angleLabel = CalcOverlayUtil.setupJLabel(String.format(Locale.US, "%.2f", angleToCoords.getActualAngle()));
                             anglePanel.add(angleLabel, BorderLayout.CENTER);
 
                             if (displayedDistance == 0) {
@@ -116,7 +118,7 @@ public class MeasurementsGUI {
                             } else if (CalcOverlaySettings.getInstance().showAngleDirection) {
                                 double correction = angleToCoords.getNeededAngleCorrection();
                                 Color correctionColor = OverlayUtil.getColor(1 - Math.abs(correction) / 180);
-                                JLabel angleAdjustmentLabel = setupJLabel(String.format(Locale.US, "(%s%.1f)",
+                                JLabel angleAdjustmentLabel = CalcOverlayUtil.setupJLabel(String.format(Locale.US, "(%s%.1f)",
                                         Math.abs(correction) < 0.05 ? "" : (correction > 0 ? "-> " : "<- "),
                                         Math.abs(correction)
                                 ));
@@ -135,14 +137,6 @@ public class MeasurementsGUI {
             }
             gbc.gridy += 1;
         }
-    }
-
-    private JLabel setupJLabel(String text) {
-        JLabel jLabel = new OutlinedJLabel();
-        jLabel.setText(text);
-        jLabel.setFont(CalcOverlayUtil.getFont());
-        jLabel.setForeground(Color.WHITE);
-        return jLabel;
     }
 
     public static void main(String[] args) {

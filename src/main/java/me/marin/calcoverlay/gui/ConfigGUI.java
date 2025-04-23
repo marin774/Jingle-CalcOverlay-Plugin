@@ -53,6 +53,7 @@ public class ConfigGUI extends JPanel {
     private JPanel aaColumnsPanel;
     private JPanel aaRowsPanel;
     private JSpinner outlineWidthSpinner;
+    private JButton previewBlindCoordsOverlayButton;
 
     private JFrame previewFrame;
     private JPanel previewPanel;
@@ -67,6 +68,10 @@ public class ConfigGUI extends JPanel {
         )),
         ALL_ADVANCEMENTS(GSON.fromJson(
                 "{\"generalLocation\":{},\"spawn\":{\"overworldDistance\":4340,\"xInOverworld\":-94,\"zInOverworld\":-236,\"travelAngle\":-130.84419338173197},\"cityQuery\":{},\"monument\":{\"overworldDistance\":0,\"xInOverworld\":-3378,\"zInOverworld\":2602,\"travelAngle\":132.08916217383447},\"shulkerTransport\":{},\"stronghold\":{\"overworldDistance\":5381,\"xInOverworld\":1764,\"zInOverworld\":1012,\"travelAngle\":-107.19020650452967},\"deepDark\":{},\"isAllAdvancementsModeEnabled\":true,\"outpost\":{\"overworldDistance\":4149,\"xInOverworld\":-347,\"zInOverworld\":-232,\"travelAngle\":-133.0877053812539}}",
+                JsonObject.class
+        )),
+        BLIND_COORDS(GSON.fromJson(
+                "{\"isBlindModeEnabled\":true,\"hasDivine\":false,\"blindResult\":{\"evaluation\":\"HIGHROLL_GOOD\",\"xInNether\":-217.82,\"improveDistance\":8.071372233935255,\"zInNether\":6.88,\"averageDistance\":1086.9952915836398,\"improveDirection\":1.5392211114431098,\"highrollProbability\":0.10072320582001268,\"highrollThreshold\":400}}",
                 JsonObject.class
         ));
 
@@ -120,6 +125,12 @@ public class ConfigGUI extends JPanel {
         });
         previewAAOverlayButton.addActionListener(a -> {
             previewType = PreviewType.ALL_ADVANCEMENTS;
+            updatePreview();
+            previewFrame.setVisible(true);
+            previewFrame.requestFocus();
+        });
+        previewBlindCoordsOverlayButton.addActionListener(a -> {
+            previewType = PreviewType.BLIND_COORDS;
             updatePreview();
             previewFrame.setVisible(true);
             previewFrame.requestFocus();
@@ -629,37 +640,52 @@ public class ConfigGUI extends JPanel {
         panel6.add(spacer2, new GridConstraints(6, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JScrollPane scrollPane3 = new JScrollPane();
         scrollPane3.setHorizontalScrollBarPolicy(31);
-        settingsPane.addTab("All Advancements Overlay", scrollPane3);
+        scrollPane3.setName("");
+        settingsPane.addTab("Blind Coords Overlay", scrollPane3);
         final JPanel panel10 = new JPanel();
-        panel10.setLayout(new GridLayoutManager(3, 3, new Insets(5, 5, 5, 5), -1, -1));
+        panel10.setLayout(new GridLayoutManager(3, 1, new Insets(5, 5, 5, 5), -1, -1));
         scrollPane3.setViewportView(panel10);
-        previewAAOverlayButton = new JButton();
-        previewAAOverlayButton.setLabel("Preview All Advancements Overlay");
-        previewAAOverlayButton.setText("Preview All Advancements Overlay");
-        panel10.add(previewAAOverlayButton, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        previewBlindCoordsOverlayButton = new JButton();
+        previewBlindCoordsOverlayButton.setLabel("Preview Blind Coords Overlay");
+        previewBlindCoordsOverlayButton.setText("Preview Blind Coords Overlay");
+        panel10.add(previewBlindCoordsOverlayButton, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer3 = new Spacer();
-        panel10.add(spacer3, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel10.add(spacer3, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final JLabel label7 = new JLabel();
+        label7.setText("No config options yet.");
+        panel10.add(label7, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final JScrollPane scrollPane4 = new JScrollPane();
+        scrollPane4.setHorizontalScrollBarPolicy(31);
+        settingsPane.addTab("All Advancements Overlay", scrollPane4);
         final JPanel panel11 = new JPanel();
-        panel11.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
-        panel10.add(panel11, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel11.setLayout(new GridLayoutManager(3, 3, new Insets(5, 5, 5, 5), -1, -1));
+        scrollPane4.setViewportView(panel11);
+        previewAAOverlayButton = new JButton();
+        previewAAOverlayButton.setText("Preview All Advancements Overlay");
+        panel11.add(previewAAOverlayButton, new GridConstraints(0, 0, 1, 3, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer4 = new Spacer();
+        panel11.add(spacer4, new GridConstraints(2, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JPanel panel12 = new JPanel();
-        panel12.setLayout(new GridLayoutManager(1, 1, new Insets(5, 5, 5, 5), -1, -1));
-        panel11.add(panel12, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panel12.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Columns", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
-        aaColumnsPanel = new JPanel();
-        aaColumnsPanel.setLayout(new GridBagLayout());
-        panel12.add(aaColumnsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel12.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel11.add(panel12, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JPanel panel13 = new JPanel();
         panel13.setLayout(new GridLayoutManager(1, 1, new Insets(5, 5, 5, 5), -1, -1));
-        panel11.add(panel13, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        panel13.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Rows", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        panel12.add(panel13, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel13.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Columns", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
+        aaColumnsPanel = new JPanel();
+        aaColumnsPanel.setLayout(new GridBagLayout());
+        panel13.add(aaColumnsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final JPanel panel14 = new JPanel();
+        panel14.setLayout(new GridLayoutManager(1, 1, new Insets(5, 5, 5, 5), -1, -1));
+        panel12.add(panel14, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        panel14.setBorder(BorderFactory.createTitledBorder(BorderFactory.createEtchedBorder(), "Rows", TitledBorder.DEFAULT_JUSTIFICATION, TitledBorder.DEFAULT_POSITION, null, null));
         aaRowsPanel = new JPanel();
         aaRowsPanel.setLayout(new GridBagLayout());
-        panel13.add(aaRowsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final Spacer spacer4 = new Spacer();
-        panel11.add(spacer4, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        panel14.add(aaRowsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_VERTICAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final Spacer spacer5 = new Spacer();
-        mainPanel.add(spacer5, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel12.add(spacer5, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final Spacer spacer6 = new Spacer();
+        mainPanel.add(spacer6, new GridConstraints(4, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
     }
 
     /**

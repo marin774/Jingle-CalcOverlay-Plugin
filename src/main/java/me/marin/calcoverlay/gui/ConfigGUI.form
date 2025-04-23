@@ -309,6 +309,48 @@
                   </grid>
                 </children>
               </scrollpane>
+              <scrollpane id="11924">
+                <constraints>
+                  <tabbedpane title="Blind Coords Overlay"/>
+                </constraints>
+                <properties>
+                  <horizontalScrollBarPolicy value="31"/>
+                  <name value=""/>
+                </properties>
+                <border type="none"/>
+                <children>
+                  <grid id="ba248" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                    <margin top="5" left="5" bottom="5" right="5"/>
+                    <constraints/>
+                    <properties/>
+                    <border type="none"/>
+                    <children>
+                      <component id="137fb" class="javax.swing.JButton" binding="previewBlindCoordsOverlayButton">
+                        <constraints>
+                          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <label value="Preview Blind Coords Overlay"/>
+                          <text value="Preview Blind Coords Overlay"/>
+                        </properties>
+                      </component>
+                      <vspacer id="838db">
+                        <constraints>
+                          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                      </vspacer>
+                      <component id="4fd53" class="javax.swing.JLabel">
+                        <constraints>
+                          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties>
+                          <text value="No config options yet."/>
+                        </properties>
+                      </component>
+                    </children>
+                  </grid>
+                </children>
+              </scrollpane>
               <scrollpane id="4a09d">
                 <constraints>
                   <tabbedpane title="All Advancements Overlay"/>
@@ -329,7 +371,6 @@
                           <grid row="0" column="0" row-span="1" col-span="3" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
                         </constraints>
                         <properties>
-                          <label value="Preview All Advancements Overlay"/>
                           <text value="Preview All Advancements Overlay"/>
                         </properties>
                       </component>

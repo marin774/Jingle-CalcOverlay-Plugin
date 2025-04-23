@@ -1,9 +1,11 @@
 package me.marin.calcoverlay.util;
 
 import me.marin.calcoverlay.CalcOverlay;
+import me.marin.calcoverlay.gui.OutlinedJLabel;
 import me.marin.calcoverlay.io.CalcOverlaySettings;
 import org.apache.logging.log4j.Level;
 
+import javax.swing.*;
 import java.awt.*;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
@@ -31,6 +33,14 @@ public class CalcOverlayUtil {
             CalcOverlay.log(Level.WARN, "Could not load font: " + fontData);
         }
         return font;
+    }
+
+    public static JLabel setupJLabel(String text) {
+        JLabel jLabel = new OutlinedJLabel();
+        jLabel.setText(text);
+        jLabel.setFont(CalcOverlayUtil.getFont());
+        jLabel.setForeground(Color.WHITE);
+        return jLabel;
     }
 
     public static double normalizeAngle(double angle) {
