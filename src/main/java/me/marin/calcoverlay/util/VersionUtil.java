@@ -18,7 +18,7 @@ import static me.marin.calcoverlay.CalcOverlay.log;
 
 public class VersionUtil {
 
-    public static final Version CURRENT_VERSION = new Version(2, 1, 0);
+    public static final Version CURRENT_VERSION = new Version(2, 2, 0);
 
     public static Version version(String version) {
         String[] parts = version.split("\\.");
