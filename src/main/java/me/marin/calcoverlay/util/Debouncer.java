@@ -17,11 +17,14 @@ public class Debouncer {
     }
 
     public void runTask(Runnable runnable) {
+        this.cancel();
+        task = service.schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
+    }
+
+    public void cancel() {
         if (task != null && !task.isDone()) {
             task.cancel(false);
         }
-
-        task = service.schedule(runnable, delayMs, TimeUnit.MILLISECONDS);
     }
 
 

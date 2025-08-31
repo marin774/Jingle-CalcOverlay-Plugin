@@ -3,15 +3,13 @@ package me.marin.calcoverlay.gui;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import lombok.Getter;
+import me.marin.calcoverlay.io.CalcOverlaySettings;
 import me.marin.calcoverlay.util.CalcOverlayUtil;
 import me.marin.calcoverlay.util.OverlayUtil;
 
 import javax.swing.*;
-import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.Locale;
-
-import static me.marin.calcoverlay.util.OverlayUtil.NETHER_COORDS_COLOR;
 
 public class BlindCoordsGUI {
 
@@ -28,9 +26,8 @@ public class BlindCoordsGUI {
         gbc.gridx = 0;
         gbc.gridy = 0;
 
-        JLabel coordsLabel = CalcOverlayUtil.setupJLabel(String.format(Locale.US, "(%d, %d)", xNether, zNether));
-        coordsLabel.setForeground(NETHER_COORDS_COLOR);
-        blindCorodsPanel.add(coordsLabel, gbc);
+        JPanel coords = CalcOverlayUtil.setupCoordsLabel(xNether, zNether, true, CalcOverlaySettings.getInstance().netherCoordsColor, CalcOverlaySettings.getInstance().negativeCoords);
+        blindCorodsPanel.add(coords, gbc);
 
         JLabel probabilityLabel = CalcOverlayUtil.setupJLabel(String.format(Locale.US, "%.1f%%", probability * 100));
         probabilityLabel.setForeground(getColor(evaluation));

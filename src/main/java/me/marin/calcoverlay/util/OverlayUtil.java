@@ -28,6 +28,7 @@ import java.util.List;
 
 import static me.marin.calcoverlay.CalcOverlay.NINJABRAIN_BOT_EVENT_SUBSCRIBER;
 import static me.marin.calcoverlay.CalcOverlay.log;
+import static me.marin.calcoverlay.io.CalcOverlaySettings.PreviewType.*;
 import static me.marin.calcoverlay.ninjabrainapi.NinjabrainBotEventSubscriber.GSON;
 
 public class OverlayUtil {
@@ -44,7 +45,8 @@ public class OverlayUtil {
     public static Image spawnIconImage = null;
     public static Image strongholdIconImage = null;
 
-    public static Color NETHER_COORDS_COLOR = new Color(0xFFB4B4);
+    public static Color DEFAULT_NETHER_COORDS_COLOR = Color.WHITE;
+    public static Color DEFAULT_NEGATIVE_COORDS_COLOR = new Color(0xFFB4B4);
 
     public static void loadImagesAndStyles() {
         try {
@@ -158,19 +160,22 @@ public class OverlayUtil {
         }
     }
 
-    public static JPanel getPreviewPanel(ConfigGUI.PreviewType previewType) {
+    public static JPanel getPreviewPanel(CalcOverlaySettings.PreviewType previewType, JsonObject dummyData) {
         switch (previewType) {
             default:
             case EYE_THROWS:
-                return getPanelForStronghold(previewType.getResponse());
+                return getPanelForStronghold(dummyData);
             case ALL_ADVANCEMENTS:
-                return getPanelForAllAdvancements(previewType.getResponse());
+                return getPanelForAllAdvancements(dummyData);
             case BLIND_COORDS:
-                return getPanelForBlindCoords(previewType.getResponse());
+                return getPanelForBlindCoords(dummyData);
         }
     }
 
     public static JPanel getPanelForAllAdvancements(JsonObject aaResponse) {
+        if (!ALL_ADVANCEMENTS.isEnabled()) {
+            return OverlayUtil.empty();
+        }
         if (!aaResponse.get("isAllAdvancementsModeEnabled").getAsBoolean()) {
             return OverlayUtil.empty();
         }
@@ -195,6 +200,9 @@ public class OverlayUtil {
     }
 
     public static JPanel getPanelForBlindCoords(JsonObject bcResponse) {
+        if (!BLIND_COORDS.isEnabled()) {
+            return OverlayUtil.empty();
+        }
         if (bcResponse == null) {
             return OverlayUtil.empty();
         }

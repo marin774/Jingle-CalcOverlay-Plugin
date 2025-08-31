@@ -50,9 +50,7 @@ dependencies {
     shadow "org.drjekyll:fontchooser:2.4"
 }
 
-shadowJar {
-    configurations = [project.configurations.shadow]
-}
+
 
 processResources {
     inputs.property "version", project.version
@@ -60,6 +58,11 @@ processResources {
     filesMatching("jingle.plugin.json") {
         expand "version": project.version
     }
+}
+
+
+shadowJar {
+    configurations = [project.configurations.shadow]
 }
 
 var jinglePluginsFolderPath = "${System.getProperty('user.home')}/.config/Jingle/plugins"

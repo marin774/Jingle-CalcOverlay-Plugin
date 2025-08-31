@@ -53,6 +53,11 @@ public class NinjabrainBotEventSubscriber {
         }
         list.clear();
         isConnected.set(false);
+
+        if (clearOverlayDebouncer != null) {
+            clearOverlayDebouncer.cancel();
+        }
+
         OverlayUtil.writeImage(OverlayUtil.empty());
         log(Level.INFO, "Disconnected from Ninjabrain Bot API.");
     }
@@ -61,6 +66,7 @@ public class NinjabrainBotEventSubscriber {
     private static final Object LOCK = new Object();
     @Getter
     private JsonObject latestResponse;
+    private Debouncer clearOverlayDebouncer;
 
     public void subscribeToEvents() {
         list.add(sseClient.subscribe("stronghold", response -> {
@@ -74,6 +80,27 @@ public class NinjabrainBotEventSubscriber {
     public void updateImage() {
         synchronized (LOCK) {
             OverlayUtil.writeImage(OverlayUtil.getPanelForStronghold(latestResponse));
+            if (clearOverlayDebouncer != null) {
+                clearOverlayDebouncer.runTask(() -> {
+                    OverlayUtil.writeImage(OverlayUtil.empty());
+                });
+            }
+        }
+    }
+
+    public void updateClearOverlayTime() {
+        if (CalcOverlaySettings.getInstance().clearOverlayAfter.getTimeUnit() == CalcOverlaySettings.ClearOverlayTimeUnit.NEVER) {
+            clearOverlayDebouncer = null;
+            return;
+        }
+        int seconds = CalcOverlaySettings.getInstance().clearOverlayAfter.getAmount();
+        seconds *= CalcOverlaySettings.getInstance().clearOverlayAfter.getTimeUnit() == CalcOverlaySettings.ClearOverlayTimeUnit.MINUTES ? 60 : 1;
+        if (clearOverlayDebouncer != null) {
+            clearOverlayDebouncer.cancel();
+            clearOverlayDebouncer = null;
+        }
+        if (seconds > 0) {
+            clearOverlayDebouncer = new Debouncer(seconds * 1000);
         }
     }
 

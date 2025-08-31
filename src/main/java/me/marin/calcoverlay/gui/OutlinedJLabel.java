@@ -13,6 +13,8 @@ public class OutlinedJLabel extends JLabel {
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
+        System.out.println("Paint " + getText());
+
         TextLayout textLayout = new TextLayout(this.getText(), this.getFont(), g2d.getFontRenderContext());
         Shape outline = textLayout.getOutline(null);
 

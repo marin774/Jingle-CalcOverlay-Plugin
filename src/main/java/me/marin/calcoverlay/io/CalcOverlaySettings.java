@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.Getter;
-import lombok.ToString;
+import lombok.*;
 import me.marin.calcoverlay.util.OverlayUtil;
 import me.marin.calcoverlay.util.VersionUtil;
 import org.apache.logging.log4j.Level;
@@ -18,7 +15,9 @@ import java.awt.*;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import static me.marin.calcoverlay.CalcOverlay.SETTINGS_PATH;
 import static me.marin.calcoverlay.CalcOverlay.log;
@@ -26,7 +25,11 @@ import static me.marin.calcoverlay.CalcOverlay.log;
 @ToString
 public class CalcOverlaySettings {
 
-    private static final Gson GSON = new GsonBuilder().excludeFieldsWithoutExposeAnnotation().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder()
+            .registerTypeAdapter(Color.class, new ColorSerializer())
+            .excludeFieldsWithoutExposeAnnotation()
+            .setPrettyPrinting()
+            .create();
 
     @Getter
     private static CalcOverlaySettings instance = null;
@@ -48,12 +51,23 @@ public class CalcOverlaySettings {
     @Expose @SerializedName("outline width")
     public int outlineWidth;
 
+    @Expose @SerializedName("nether coords color")
+    public Color netherCoordsColor;
+
+    @Expose @SerializedName("negative coords")
+    public NegativeCoords negativeCoords;
+
+    @Expose @SerializedName("clear overlay after")
+    public ClearOverlayAfter clearOverlayAfter;
+
+    @Expose @SerializedName("display overlay")
+    public Map<PreviewType, Boolean> displayOverlayMap;
+
     /* ********************************************************************* */
 
 
 
     /****************** Eye throws (stronghold endpoint) *********************/
-    /* For now, I'm leaving it here, even though it should be its own class. */
 
     @Expose @SerializedName("columns")
     public List<ColumnData> columnData;
@@ -90,7 +104,7 @@ public class CalcOverlaySettings {
 
         try {
             instance = GSON.fromJson(FileUtil.readString(SETTINGS_PATH), CalcOverlaySettings.class);
-        } catch (IOException e) {
+        } catch (Exception e) {
             log(Level.ERROR, "Error while reading settings, resetting back to default:\n" + ExceptionUtil.toDetailedString(e));
             loadDefaultSettings();
         }
@@ -122,6 +136,13 @@ public class CalcOverlaySettings {
         instance.shownMeasurements = 3;
         instance.aaSettings = AllAdvancementsSettings.loadDefaultSettings();
         instance.outlineWidth = 3;
+        instance.clearOverlayAfter = new ClearOverlayAfter(ClearOverlayTimeUnit.NEVER, 1);
+        instance.netherCoordsColor = OverlayUtil.DEFAULT_NETHER_COORDS_COLOR;
+        instance.negativeCoords = new CalcOverlaySettings.NegativeCoords(true, OverlayUtil.DEFAULT_NEGATIVE_COORDS_COLOR);
+        instance.displayOverlayMap = new HashMap<>();
+        instance.displayOverlayMap.put(PreviewType.EYE_THROWS, true);
+        instance.displayOverlayMap.put(PreviewType.ALL_ADVANCEMENTS, true);
+        instance.displayOverlayMap.put(PreviewType.BLIND_COORDS, true);
     }
 
     @AllArgsConstructor @Getter
@@ -274,6 +295,59 @@ public class CalcOverlaySettings {
             return null;
         }
 
+    }
+
+    @Setter @Getter @AllArgsConstructor
+    public static class ClearOverlayAfter {
+        @Expose @SerializedName("time unit")
+        public ClearOverlayTimeUnit timeUnit;
+        @Expose @SerializedName("amount")
+        public int amount;
+    }
+
+    @AllArgsConstructor @Getter
+    public enum ClearOverlayTimeUnit {
+        @Expose @SerializedName("never")
+        NEVER("never"),
+        @Expose @SerializedName("seconds")
+        SECONDS("seconds"),
+        @Expose @SerializedName("minutes")
+        MINUTES("minutes");
+
+        private final String display;
+
+        public static ClearOverlayTimeUnit match(String s) {
+            for (ClearOverlayTimeUnit value : ClearOverlayTimeUnit.values()) {
+                if (value.display.equals(s)) {
+                    return value;
+                }
+            }
+            return null;
+        }
+
+    }
+
+    @Setter @Getter @AllArgsConstructor
+    public static class NegativeCoords {
+        @Expose @SerializedName("use")
+        public boolean use;
+        @Expose @SerializedName("color")
+        public Color color;
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public enum PreviewType {
+        @Expose @SerializedName("eye throws")
+        EYE_THROWS,
+        @Expose @SerializedName("all advancements")
+        ALL_ADVANCEMENTS,
+        @Expose @SerializedName("blind coords")
+        BLIND_COORDS;
+
+        public boolean isEnabled() {
+            return CalcOverlaySettings.getInstance().displayOverlayMap.getOrDefault(this, false);
+        }
     }
 
 }

@@ -22,6 +22,7 @@ import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
+import java.util.HashMap;
 import java.util.Objects;
 
 import static me.marin.calcoverlay.util.VersionUtil.CURRENT_VERSION;
@@ -66,6 +67,7 @@ public class CalcOverlay {
         }
 
         NINJABRAIN_BOT_EVENT_SUBSCRIBER.startConnectJob();
+        NINJABRAIN_BOT_EVENT_SUBSCRIBER.updateClearOverlayTime();
 
         VersionUtil.deleteOldVersionJars();
         UpdateUtil.checkForUpdatesAndUpdate(true);
@@ -76,6 +78,7 @@ public class CalcOverlay {
 
     public static void updateData(VersionUtil.Version fromVersion) {
         log(Level.INFO, "Updating data from version " + fromVersion + ".");
+        CalcOverlaySettings instance = CalcOverlaySettings.getInstance();
         if (fromVersion.isOlderThan(version("1.1.0"))) {
             CalcOverlaySettings.getInstance().shownMeasurements = 3;
             log(Level.INFO, "[1.1.0] 'shown measurements' set to 3");
@@ -111,6 +114,17 @@ public class CalcOverlay {
                                 "** Check Jingle Logs or Github for more information. **",
                         "CalcOverlay v2.0.0", JOptionPane.INFORMATION_MESSAGE);
             });
+        }
+
+        if (fromVersion.isOlderThan(version("2.2.0"))) {
+            instance.clearOverlayAfter = new CalcOverlaySettings.ClearOverlayAfter(CalcOverlaySettings.ClearOverlayTimeUnit.NEVER, 1);
+            instance.netherCoordsColor = OverlayUtil.DEFAULT_NETHER_COORDS_COLOR;
+            instance.negativeCoords = new CalcOverlaySettings.NegativeCoords(true, OverlayUtil.DEFAULT_NEGATIVE_COORDS_COLOR);
+
+            instance.displayOverlayMap = new HashMap<>();
+            instance.displayOverlayMap.put(CalcOverlaySettings.PreviewType.EYE_THROWS, true);
+            instance.displayOverlayMap.put(CalcOverlaySettings.PreviewType.ALL_ADVANCEMENTS, true);
+            instance.displayOverlayMap.put(CalcOverlaySettings.PreviewType.BLIND_COORDS, true);
         }
 
         CalcOverlaySettings.getInstance().version = CURRENT_VERSION.toString();
