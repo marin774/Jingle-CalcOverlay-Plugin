@@ -25,7 +25,7 @@ public class EyeThrow {
         switch ((int) settings.getOrDefault("angle_adjustment_type", 0)) {
             case 1:
                 final double toRad = Math.PI / 180.0;
-                change = Math.atan(2 * Math.tan(15 * toRad) / (double) settings.get("resolution_height")) / Math.cos(beta * toRad) / toRad;
+                change = Math.atan(2 * Math.tan(15 * toRad) / (double) settings.getOrDefault("resolution_height", 16384)) / Math.cos(beta * toRad) / toRad;
                 break;
             case 2:
                 change = (double) settings.get("custom_adjustment");

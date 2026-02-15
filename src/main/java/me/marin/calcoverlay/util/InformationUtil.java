@@ -37,16 +37,16 @@ public class InformationUtil {
     private static double getStdDev(EyeThrow eyeThrow, Map<String, Object> settings) {
         switch (eyeThrow.getType()) {
             case "NORMAL": {
-                return (double) settings.get("sigma");
+                return (double) settings.getOrDefault("sigma", 0.01);
             }
             case "NORMAL_WITH_ALT_STD": {
-                return (double) settings.get("sigma_alt");
+                return (double) settings.getOrDefault("sigma_alt", 0.01);
             }
             case "MANUAL": {
-                return (double) settings.get("sigma_manual");
+                return (double) settings.getOrDefault("sigma_manual", 0.01);
             }
             case "BOAT": {
-                return (double) settings.get("sigma_boat");
+                return (double) settings.getOrDefault("sigma_boat", 0.0007);
             }
         }
         return 0;

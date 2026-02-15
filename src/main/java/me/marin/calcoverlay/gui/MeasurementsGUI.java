@@ -28,7 +28,6 @@ public class MeasurementsGUI {
     private JPanel errorPanel;
     private JLabel highErrorLabel;
     private JLabel portalLinkLabel;
-    private JLabel adjustmentLabel;
 
     public static void main(String[] args) {
 
@@ -198,7 +197,6 @@ public class MeasurementsGUI {
             boolean canLink = InformationUtil.canLink(predictions.get(0).getKey(), eyeThrows.get(0));
             portalLinkLabel.setVisible(canLink);
 
-
             JPanel anglePanel = new JPanel();
             BorderLayout layout = new BorderLayout();
             layout.setHgap(6);
@@ -256,7 +254,8 @@ public class MeasurementsGUI {
         gbc.gridy = 1;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
-        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.SOUTH;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.insets = new Insets(0, 20, 0, 20);
         mainPanel.add(errorPanel, gbc);
         final JPanel panel1 = new JPanel();
@@ -284,7 +283,4 @@ public class MeasurementsGUI {
         return mainPanel;
     }
 
-    private void createUIComponents() {
-        adjustmentLabel = setupJLabel("");
-    }
 }
