@@ -72,11 +72,17 @@ public class CalcOverlaySettings {
     @Expose @SerializedName("columns")
     public List<ColumnData> columnData;
 
-    @Expose @SerializedName("show angle direction")
+    @SerializedName("show angle direction")
     public boolean showAngleDirection;
+
+    @Expose @SerializedName("angle display")
+    public AngleDisplay angleDisplay;
 
     @Expose @SerializedName("show coords based on dimension")
     public boolean onlyShowCurrentDimensionCoords;
+
+    @Expose @SerializedName("show information bar")
+    public boolean showInfoBar;
 
     @Expose @SerializedName("overworld coords")
     public OverworldsCoords overworldCoords;
@@ -143,6 +149,8 @@ public class CalcOverlaySettings {
         instance.displayOverlayMap.put(PreviewType.EYE_THROWS, true);
         instance.displayOverlayMap.put(PreviewType.ALL_ADVANCEMENTS, true);
         instance.displayOverlayMap.put(PreviewType.BLIND_COORDS, true);
+        instance.angleDisplay = AngleDisplay.ALL;
+        instance.showInfoBar = false;
     }
 
     @AllArgsConstructor @Getter
@@ -348,6 +356,29 @@ public class CalcOverlaySettings {
         public boolean isEnabled() {
             return CalcOverlaySettings.getInstance().displayOverlayMap.getOrDefault(this, false);
         }
+    }
+
+    @AllArgsConstructor
+    @Getter
+    public enum AngleDisplay {
+        @Expose @SerializedName("all")
+        ALL("Angle (and angle change)"),
+        @Expose @SerializedName("angle")
+        ONLY_ANGLE("Angle only"),
+        @Expose @SerializedName("angle change")
+        ONLY_ANGLE_CHANGE("Angle change only");
+
+        private final String display;
+
+        public static AngleDisplay match(String s) {
+            for (AngleDisplay value : AngleDisplay.values()) {
+                if (value.display.equals(s)) {
+                    return value;
+                }
+            }
+            return null;
+        }
+
     }
 
 }

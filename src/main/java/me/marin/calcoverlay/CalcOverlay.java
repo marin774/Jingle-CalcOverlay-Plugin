@@ -127,6 +127,11 @@ public class CalcOverlay {
             instance.displayOverlayMap.put(CalcOverlaySettings.PreviewType.BLIND_COORDS, true);
         }
 
+        if (fromVersion.isOlderThan(version("2.3.0"))) {
+            instance.angleDisplay = instance.showAngleDirection ? CalcOverlaySettings.AngleDisplay.ALL : CalcOverlaySettings.AngleDisplay.ONLY_ANGLE;
+            instance.showInfoBar = false;
+        }
+
         CalcOverlaySettings.getInstance().version = CURRENT_VERSION.toString();
         CalcOverlaySettings.save();
         log(Level.INFO, "Updated data to v" + CURRENT_VERSION);
