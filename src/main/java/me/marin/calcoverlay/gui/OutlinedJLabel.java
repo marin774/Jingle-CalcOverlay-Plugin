@@ -13,8 +13,6 @@ public class OutlinedJLabel extends JLabel {
     public void paintComponent(Graphics g) {
         Graphics2D g2d = (Graphics2D) g;
 
-        System.out.println("Paint " + getText());
-
         TextLayout textLayout = new TextLayout(this.getText(), this.getFont(), g2d.getFontRenderContext());
         Shape outline = textLayout.getOutline(null);
 
@@ -32,17 +30,15 @@ public class OutlinedJLabel extends JLabel {
         expandClip(g2d, CalcOverlaySettings.getInstance().outlineWidth);
 
         GlyphVector glyphVector = this.getFont().createGlyphVector(g2d.getFontRenderContext(), this.getText());
+        g2d.setPaint(Color.BLACK);
         for (int i = 0; i < this.getText().length(); i++) {
             Shape glyphOutline = glyphVector.getGlyphOutline(i);
 
-            // Draw black outline
-            g2d.setPaint(Color.BLACK);
             g2d.draw(glyphOutline);
-
-            // Fill inside
-            g2d.setPaint(this.getForeground());
-            g2d.fill(outline);
         }
+        // Fill inside
+        g2d.setPaint(this.getForeground());
+        g2d.fill(outline);
 
         // Set original values
         g2d.setStroke(stroke);
