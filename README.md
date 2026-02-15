@@ -1,6 +1,6 @@
 # Jingle Calc Overlay Plugin
 
-A Jingle plugin for a nicer Ninjabrain Bot OBS overlay. Overlays can be customized in settings.
+A Jingle plugin for a nicer Ninjabrain Bot overlay. Overlays can be customized in settings.
 
 ![image](https://github.com/user-attachments/assets/5e522f9b-ef3b-46dc-bafa-728589848235)
 

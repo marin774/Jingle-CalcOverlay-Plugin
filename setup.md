@@ -20,25 +20,28 @@ Once you've installed the plugin and restarted Jingle, enable the plugin and con
 2. Enable overlay by clicking on the "Enable overlay" checkbox.
 
 ## Setup OBS Script & Overlay
+
+Only do this setup if you don't use Toolscreen, or if you want a different overlay on OBS.
+
 1. In Jingle, click "Copy Script Path" button.
    
    ![image](https://github.com/user-attachments/assets/0df671e0-d77a-4e77-96a6-b4e366baba08)
 
 2. Open OBS. Navigate to "Tools" -> "Scripts".
 
-   ![image](https://kappa.lol/CJ3qxg)
+   <img width="535" height="206" alt="image" src="https://github.com/user-attachments/assets/20f93845-9c7b-41a7-b44b-d220bd3b56ab" />
  
 3. Click + in bottom left corner.
 
-   ![image](https://kappa.lol/PRCN_5)
+   <img width="763" height="517" alt="image" src="https://github.com/user-attachments/assets/35ff854b-a101-437a-a856-d753bc65a2ff" />
 
 4. Paste Script Path you copied in step 1, then paste it in the bottom bar. Click "Open".
 
-   ![image](https://kappa.lol/HqYBOx)
+   <img width="943" height="508" alt="image" src="https://github.com/user-attachments/assets/818fe8f0-f5e6-453f-bdf6-c01019ac0357" />
 
 5. Add a new OBS source. Click "+", then "Calc Overlay". That's it.
 
-   ![image](https://kappa.lol/wsZdal)
+   <img width="356" height="539" alt="image" src="https://github.com/user-attachments/assets/cdf05656-75ba-4643-9c5c-c40a69a3c6a0" />
 
 
 ## Configuring Calc Overlay
@@ -59,20 +62,21 @@ There is a lot of configuration you can do. I'll go over each setting:
 
 ### Eye Throws Overlay
 
-![image](https://github.com/user-attachments/assets/0427a2ee-0e0a-4bdd-a950-1fca1dd66c67)
+<img width="568" height="446" alt="image" src="https://github.com/user-attachments/assets/bd25e98e-564f-4975-ab88-bf216ead68a7" />
 
 Click "Preview Eye Throws Overlay". This will open a new window that displays a dummy eye throw measurement. You can see how your layout might look like in OBS.
 
 - **Shown measurements** - number of displayed rows for measurements, between 1 and 5
 - **Overworld coords** - same as the Ninjabrain Bot setting (chunk, 8-8 or 4-4)
-- **Show angle direction** - whether to show what direction you need to go (shown next to Angle, e.g. `(<- 14.2)`)
+- **Angle display** - whether to show angle and angle change (e.g. `35.53 (<- 8.4)`), just the angle (e.g. `35.53`), or just the angle change (e.g. `<- 8.4`)
+- **Show info bar** - displays more info: high error, close stronghold (portal link), and angle + adjustments on the last measurement (this is estimated, will be fixed with Ninjabrain Bot v1.5.2+)
 - **Show Overworld/Nether coords based on dimension** - displays ONLY overworld or nether coords, depending on the last dimension you F3+C'd in (even if they are both disabled in Column Settings)
 
 #### Columns
 - **Show column** - whether to show the column or not
 - **Header** - what to show above the column: text, icon, or nothing
 - **Move left** - moves the column 1 place left
-- **Move down** - moves the column 1 place right
+- **Move right** - moves the column 1 place right
 
 ---
 
@@ -89,7 +93,7 @@ Click "Preview All Advancements Overlay". This will open a new window that displ
 - **Show column** - whether to show the column or not
 - **Header** - what to show above the column: text or nothing
 - **Move left** - moves the column 1 place left
-- **Move down** - moves the column 1 place right
+- **Move right** - moves the column 1 place right
 
 #### Rows
 - **Show row** - whether to show the row or not
