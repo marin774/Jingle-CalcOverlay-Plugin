@@ -88,17 +88,19 @@ public class OverlayUtil {
         return null;
     }
 
+    private static Debouncer imageWriteDebouncer = new Debouncer(50);
     public static void writeImage(JPanel panel) {
-        JPanel wrapper = getFinalOverlayPanel(panel);
+        imageWriteDebouncer.runTask(() -> {
+            JPanel wrapper = getFinalOverlayPanel(panel);
 
-        BufferedImage image = ScreenImage.createImage(wrapper);
-
-        try {
-            ImageIO.write(image, "png", CalcOverlay.OVERLAY_PATH.toFile());
-            Files.write(CalcOverlay.OBS_LINK_STATE_PATH, String.valueOf(System.nanoTime()).getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING);
-        } catch (Exception e) {
-            log(Level.ERROR, "Error while writing overlay:\n" + ExceptionUtil.toDetailedString(e));
-        }
+            BufferedImage image = ScreenImage.createImage(wrapper);
+            try {
+                ImageIO.write(image, "png", CalcOverlay.OVERLAY_PATH.toFile());
+                Files.write(CalcOverlay.OBS_LINK_STATE_PATH, String.valueOf(System.nanoTime()).getBytes(StandardCharsets.UTF_8), StandardOpenOption.TRUNCATE_EXISTING);
+            } catch (Exception e) {
+                log(Level.ERROR, "Error while writing overlay:\n" + ExceptionUtil.toDetailedString(e));
+            }
+        });
     }
 
     private final static int IMAGE_WIDTH = 1250;
