@@ -64,9 +64,9 @@ If you're using Toolscreen, you can use CalcOverlay's window overlay instead of 
    - Click "Enable Color Key".
    - Click "+ Add Color Key".
    - Click the box next to numbers and paste the Color Key in the bottom bar.
-   - Move the slider to 0.001.
+   - Move the slider to 0.02.
 
-   <img width="536" height="412" alt="image" src="https://github.com/user-attachments/assets/4f7637ad-891c-4265-b7ce-4d01ff01b578" />
+   <img width="543" height="422" alt="image" src="https://github.com/user-attachments/assets/4645d37c-13d2-489c-9369-664dd1746822" />
 
 That's it. You can change the scale and move the Window Overlay to your liking.
 
