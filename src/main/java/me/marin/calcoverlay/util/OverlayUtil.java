@@ -90,9 +90,10 @@ public class OverlayUtil {
 
     private static Debouncer imageWriteDebouncer = new Debouncer(50);
     public static void writeImage(JPanel panel) {
-        imageWriteDebouncer.runTask(() -> {
-            JPanel wrapper = getFinalOverlayPanel(panel);
+        JPanel wrapper = getFinalOverlayPanel(panel);
 
+        OverlayCaptureWindow.getInstance().updateOverlay(wrapper);
+        imageWriteDebouncer.runTask(() -> {
             BufferedImage image = ScreenImage.createImage(wrapper);
             try {
                 ImageIO.write(image, "png", CalcOverlay.OVERLAY_PATH.toFile());
@@ -103,8 +104,8 @@ public class OverlayUtil {
         });
     }
 
-    private final static int IMAGE_WIDTH = 1250;
-    private final static int IMAGE_HEIGHT = 550;
+    public final static int IMAGE_WIDTH = 1250;
+    public final static int IMAGE_HEIGHT = 550;
 
     public static JPanel getFinalOverlayPanel(JPanel panel) {
         JPanel wrapper = new JPanel();
@@ -222,8 +223,10 @@ public class OverlayUtil {
         double zNether = blindResult.get("zInNether").getAsDouble();
         String evaluation = blindResult.get("evaluation").getAsString();
         double probability = blindResult.get("highrollProbability").getAsDouble();
+        String improveDirection = blindResult.get("improveDirection").getAsString();
+        String improveDistance = blindResult.get("improveDistance").getAsString();
 
-        return OverlayUtil.blindCoords(xNether, zNether, evaluation, probability);
+        return OverlayUtil.blindCoords(xNether, zNether, evaluation, probability, improveDirection, improveDistance);
     }
 
     public static final Color ADJUSTMENT_POSITIVE = Color.decode("#75CC6C");

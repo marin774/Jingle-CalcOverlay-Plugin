@@ -209,6 +209,21 @@ public class ConfigGUI extends JPanel {
             updatePreview();
         });
 
+        copyColorKeyButton.addActionListener(a -> {
+            StringSelection stringSelection = new StringSelection(CalcOverlayUtil.getColorKey());
+            Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+            clipboard.setContents(stringSelection, null);
+            JOptionPane.showMessageDialog(null, "Copied to clipboard.\nSet color similarity to 0.001 in Toolscreen!");
+        });
+
+        windowOverlaySetupButton.addActionListener(a -> {
+            try {
+                Desktop.getDesktop().browse(URI.create("https://github.com/marin774/Jingle-CalcOverlay-Plugin/blob/main/setup.md#toolscreen-window-overlay"));
+            } catch (Exception e) {
+                log(Level.ERROR, "Failed to open:\n" + ExceptionUtil.toDetailedString(e));
+            }
+        });
+
         copyScriptPathButton.addActionListener(a -> {
             StringSelection stringSelection = new StringSelection(OBS_SCRIPT_PATH.toAbsolutePath().toString());
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
