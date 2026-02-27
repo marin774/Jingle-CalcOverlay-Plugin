@@ -202,7 +202,7 @@ public class MeasurementsGUI {
             layout.setHgap(6);
             anglePanel.setLayout(layout);
 
-            JLabel angleLabel = setupJLabel(String.format(Locale.US, "%.2f", eyeThrows.get(eyeThrows.size() - 1).getAngleWithoutCorrection()));
+            JLabel angleLabel = setupJLabel(String.format(Locale.US, "%.2f°", eyeThrows.get(eyeThrows.size() - 1).getAngleWithoutCorrection()));
             anglePanel.add(angleLabel, BorderLayout.CENTER);
 
             JLabel angleAdjustmentLabel;

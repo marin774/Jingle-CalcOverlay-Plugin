@@ -52,6 +52,13 @@ public class CalcOverlayUtil {
         return jLabel;
     }
 
+    public static String replaceUnsupportedChars(String text) {
+        if (!CalcOverlayUtil.getFont().canDisplay('°')) {
+            text = text.replace("°", "'");
+        }
+        return text;
+    }
+
     public static JPanel setupCoordsLabel(int x, int z, boolean isNetherCoords, Color netherCoordsColor, CalcOverlaySettings.NegativeCoords negativeCoords) {
         JPanel panel = new LTRPaintOrderJPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -81,4 +88,15 @@ public class CalcOverlayUtil {
         return panel;
     }
 
+    public static Double tryParse(String s) {
+        try {
+            return Double.parseDouble(s);
+        } catch (NumberFormatException e) {
+            return null;
+        }
+    }
+
+    public static String getColorKey() {
+        return "#3C3F41";
+    }
 }

@@ -19,6 +19,7 @@ public class NinjabrainBotEventSubscriber {
     @Getter
     private final SSEClient sseClient;
     private final AtomicBoolean isConnected = new AtomicBoolean(false);
+    private final AtomicBoolean loggedFail = new AtomicBoolean(false);
     private final List<AtomicBoolean> list = new ArrayList<>();
 
     public NinjabrainBotEventSubscriber() {
@@ -40,7 +41,13 @@ public class NinjabrainBotEventSubscriber {
             if (ping()) {
                 subscribeToEvents();
                 isConnected.set(true);
+                loggedFail.set(false);
                 log(Level.INFO, "Connected to Ninjabrain Bot API.");
+            } else {
+                if (!loggedFail.get()) {
+                    log(Level.ERROR, "Failed to connect to Ninjabrain Bot API. Try restarting Ninjabrain Bot if it's running. Reconnecting...");
+                    loggedFail.set(true);
+                }
             }
         }, 500);
     }

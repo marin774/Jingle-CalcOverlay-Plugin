@@ -59,12 +59,14 @@ public class OverlayUtil {
         }
     }
 
-    public static JPanel blindCoords(double xNether, double zNether, String evauluation, double probability) {
+    public static JPanel blindCoords(double xNether, double zNether, String evauluation, double probability, String improveDirection, String improveDistance) {
         return new BlindCoordsGUI(
                 (int) Math.floor(xNether),
                 (int) Math.floor(zNether),
                 evauluation,
-                probability
+                probability,
+                improveDirection,
+                improveDistance
         ).getMainPanel();
     }
 
