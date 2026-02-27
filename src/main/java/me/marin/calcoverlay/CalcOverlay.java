@@ -132,6 +132,11 @@ public class CalcOverlay {
             instance.showInfoBar = false;
         }
 
+        if (fromVersion.isOlderThan(version("2.4.0"))) {
+            instance.enableWindowOverlay = false;
+            instance.showDirectionAndDistance = false;
+        }
+
         CalcOverlaySettings.getInstance().version = CURRENT_VERSION.toString();
         CalcOverlaySettings.save();
         log(Level.INFO, "Updated data to v" + CURRENT_VERSION);

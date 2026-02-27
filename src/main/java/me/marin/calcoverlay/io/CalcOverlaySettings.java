@@ -64,6 +64,9 @@ public class CalcOverlaySettings {
     @Expose @SerializedName("display overlay")
     public Map<PreviewType, Boolean> displayOverlayMap;
 
+    @Expose @SerializedName("enable window overlay")
+    public boolean enableWindowOverlay;
+
     /* ********************************************************************* */
 
 
@@ -158,6 +161,7 @@ public class CalcOverlaySettings {
         instance.angleDisplay = AngleDisplay.ALL;
         instance.showInfoBar = false;
         instance.showDirectionAndDistance = false;
+        instance.enableWindowOverlay = false;
     }
 
     @AllArgsConstructor @Getter

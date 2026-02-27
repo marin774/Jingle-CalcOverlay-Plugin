@@ -59,7 +59,7 @@
                 </properties>
                 <border type="none"/>
                 <children>
-                  <grid id="2a5af" layout-manager="GridLayoutManager" row-count="6" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                  <grid id="2a5af" layout-manager="GridLayoutManager" row-count="7" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
                     <margin top="5" left="5" bottom="5" right="5"/>
                     <constraints/>
                     <properties/>
@@ -151,7 +151,7 @@
                       </grid>
                       <vspacer id="80fc1">
                         <constraints>
-                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
+                          <grid row="6" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false"/>
                         </constraints>
                       </vspacer>
                       <grid id="2cf09" layout-manager="GridLayoutManager" row-count="3" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -159,7 +159,9 @@
                         <constraints>
                           <grid row="3" column="0" row-span="2" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
                         </constraints>
-                        <properties/>
+                        <properties>
+                          <visible value="true"/>
+                        </properties>
                         <border type="etched" title="Font &amp; Colors"/>
                         <children>
                           <grid id="858a4" layout-manager="GridLayoutManager" row-count="1" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
@@ -293,6 +295,70 @@
                               </component>
                             </children>
                           </grid>
+                        </children>
+                      </grid>
+                      <grid id="e5e47" layout-manager="GridLayoutManager" row-count="4" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                        <margin top="5" left="5" bottom="5" right="5"/>
+                        <constraints>
+                          <grid row="5" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                        </constraints>
+                        <properties/>
+                        <border type="etched" title="Toolscreen Window Overlay"/>
+                        <children>
+                          <component id="9d575" class="javax.swing.JTextPane">
+                            <constraints>
+                              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                                <preferred-size width="493" height="36"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <editable value="false"/>
+                              <enabled value="true"/>
+                              <text value="Creates an invisible window that Toolscreen can capture.&#10;NOTE: This might not work on all systems."/>
+                            </properties>
+                          </component>
+                          <grid id="ed040" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                            <margin top="0" left="0" bottom="0" right="0"/>
+                            <constraints>
+                              <grid row="2" column="0" row-span="1" col-span="3" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                            <properties/>
+                            <border type="none"/>
+                            <children>
+                              <component id="27f22" class="javax.swing.JButton" binding="copyColorKeyButton">
+                                <constraints>
+                                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <text value="Copy Color Key"/>
+                                </properties>
+                              </component>
+                              <component id="bedcc" class="javax.swing.JButton" binding="windowOverlaySetupButton">
+                                <constraints>
+                                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                                </constraints>
+                                <properties>
+                                  <text value="Setup Tutorial"/>
+                                </properties>
+                              </component>
+                            </children>
+                          </grid>
+                          <component id="8960f" class="javax.swing.JCheckBox" binding="enableWindowOverlayCheckbox">
+                            <constraints>
+                              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="8" fill="0" indent="0" use-parent-layout="false">
+                                <preferred-size width="493" height="22"/>
+                              </grid>
+                            </constraints>
+                            <properties>
+                              <label value="Enable Window Overlay"/>
+                              <text value="Enable Window Overlay"/>
+                            </properties>
+                          </component>
+                          <hspacer id="a6250">
+                            <constraints>
+                              <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="1" hsize-policy="6" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                            </constraints>
+                          </hspacer>
                         </children>
                       </grid>
                     </children>
@@ -597,44 +663,10 @@
         <properties/>
         <border type="none"/>
         <children>
-          <grid id="e5e47" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-            <margin top="0" left="0" bottom="0" right="0"/>
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties/>
-            <border type="none"/>
-            <children>
-              <component id="f7010" class="javax.swing.JLabel">
-                <constraints>
-                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Toolscreen window:"/>
-                </properties>
-              </component>
-              <component id="27f22" class="javax.swing.JButton" binding="copyColorKeyButton">
-                <constraints>
-                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Copy Color Key"/>
-                </properties>
-              </component>
-              <component id="bedcc" class="javax.swing.JButton" binding="windowOverlaySetupButton">
-                <constraints>
-                  <grid row="0" column="2" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-                </constraints>
-                <properties>
-                  <text value="Setup Tutorial"/>
-                </properties>
-              </component>
-            </children>
-          </grid>
           <grid id="5c9a6" layout-manager="GridLayoutManager" row-count="1" column-count="3" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
             <margin top="0" left="0" bottom="0" right="0"/>
             <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties/>
             <border type="none"/>
@@ -661,6 +693,32 @@
                 </constraints>
                 <properties>
                   <text value="OBS Script:"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="3bc23" layout-manager="GridLayoutManager" row-count="1" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="8" fill="2" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="27f1e" class="javax.swing.JButton" binding="copyImagePathButton">
+                <constraints>
+                  <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Copy Image Path"/>
+                </properties>
+              </component>
+              <component id="317e" class="javax.swing.JLabel">
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="Image:"/>
                 </properties>
               </component>
             </children>
