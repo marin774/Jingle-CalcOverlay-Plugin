@@ -43,6 +43,32 @@ Only do this setup if you don't use Toolscreen, or if you want a different overl
 
    <img width="356" height="539" alt="image" src="https://github.com/user-attachments/assets/cdf05656-75ba-4643-9c5c-c40a69a3c6a0" />
 
+## Toolscreen Window Overlay
+
+If you're using Toolscreen, you can use CalcOverlay's window overlay instead of Ninjabrain Bot's window overlay.
+
+1. In Jingle, click "Copy Color Key" button.
+
+   <img width="580" height="186" alt="image" src="https://github.com/user-attachments/assets/7b305b48-4ee3-4c6a-89c1-85e22210d3c1" />
+
+2. Open Toolscreen's config, navigate to Window Overlays -> "Add New Window Overlay"
+
+   <img width="428" height="225" alt="image" src="https://github.com/user-attachments/assets/02f7de69-2191-4a04-b330-3fd110c91121" />
+
+3. Expand the new Window Overlay. Under "Select Window", select "[javaw.exe] Calc Overlay [TOOLSCREEN CAPTURE WINDOW]".
+
+   <img width="644" height="220" alt="image" src="https://github.com/user-attachments/assets/6c148468-6f4b-485f-8cd9-ca47ade8db2d" />
+
+4. Add a color key to remove the gray background.
+   - Scroll down to "Color Keying".
+   - Click "Enable Color Key".
+   - Click "+ Add Color Key".
+   - Click the box next to numbers and paste the Color Key in the bottom bar.
+   - Move the slider to 0.001.
+
+   <img width="536" height="412" alt="image" src="https://github.com/user-attachments/assets/4f7637ad-891c-4265-b7ce-4d01ff01b578" />
+
+That's it. You can change the scale and move the Window Overlay to your liking.
 
 ## Configuring Calc Overlay
 There is a lot of configuration you can do. I'll go over each setting:
