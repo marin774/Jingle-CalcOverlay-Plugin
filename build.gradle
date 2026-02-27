@@ -64,9 +64,3 @@ processResources {
 shadowJar {
     configurations = [project.configurations.shadow]
 }
-
-var jinglePluginsFolderPath = "${System.getProperty('user.home')}/.config/Jingle/plugins"
-task copyJar(type: Copy) {
-    from shadowJar
-    into jinglePluginsFolderPath
-}
