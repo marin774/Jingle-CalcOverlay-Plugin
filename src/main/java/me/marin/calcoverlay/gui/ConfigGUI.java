@@ -91,7 +91,7 @@ public class ConfigGUI extends JPanel {
                 JsonObject.class
         ));
         dummyResponseMap.put(CalcOverlaySettings.PreviewType.BLIND_COORDS, GSON.fromJson(
-                "{\"isBlindModeEnabled\":true,\"hasDivine\":false,\"blindResult\":{\"evaluation\":\"HIGHROLL_GOOD\",\"xInNether\":-217.82,\"improveDistance\":8.071372233935255,\"zInNether\":6.88,\"averageDistance\":1086.9952915836398,\"improveDirection\":1.5392211114431098,\"highrollProbability\":0.10072320582001268,\"highrollThreshold\":400}}",
+                "{\"isBlindModeEnabled\":true,\"hasDivine\":false,\"blindResult\":{\"evaluation\":\"NOT_IN_RING\",\"xInNether\":-143.05,\"improveDistance\":78.67328789387852,\"zInNether\":-35.24,\"averageDistance\":1228.57020812835,\"improveDirection\":1.8123343344615066,\"highrollProbability\":0.022206831666402905,\"highrollThreshold\":400}}",
                 JsonObject.class
         ));
 
@@ -213,7 +213,7 @@ public class ConfigGUI extends JPanel {
             StringSelection stringSelection = new StringSelection(CalcOverlayUtil.getColorKey());
             Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
             clipboard.setContents(stringSelection, null);
-            JOptionPane.showMessageDialog(null, "Copied to clipboard.\nSet color similarity to 0.001 in Toolscreen!");
+            JOptionPane.showMessageDialog(null, "Copied to clipboard.\nSet color similarity to 0.02 in Toolscreen!");
         });
 
         windowOverlaySetupButton.addActionListener(a -> {
