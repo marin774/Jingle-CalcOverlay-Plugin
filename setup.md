@@ -90,7 +90,7 @@ There is a lot of configuration you can do. I'll go over each setting:
 
 <img width="568" height="446" alt="image" src="https://github.com/user-attachments/assets/bd25e98e-564f-4975-ab88-bf216ead68a7" />
 
-Click "Preview Eye Throws Overlay". This will open a new window that displays a dummy eye throw measurement. You can see how your layout might look like in OBS.
+Click "Preview Eye Throws Overlay". This will open a new window that displays a dummy eye throw measurement. You can see how your layout might look like in OBS/Toolscreen.
 
 - **Shown measurements** - number of displayed rows for measurements, between 1 and 5
 - **Overworld coords** - same as the Ninjabrain Bot setting (chunk, 8-8 or 4-4)
@@ -106,6 +106,16 @@ Click "Preview Eye Throws Overlay". This will open a new window that displays a 
 
 ---
 
+### Blind Coords Overlay
+
+<img width="512" height="181" alt="image" src="https://github.com/user-attachments/assets/f51980b2-bceb-4398-8d70-8faf08956432" />
+
+Click "Preview Blind Coords Overlay". This will open a new window that displays dummy Blind Coords info. You can see how your layout might look like in OBS/Toolscreen. 
+
+- **Show direction and distance to good blind coords** - Adds a line when you're not on good blind coords (e.g. "Head -100°, 89 blocks away").
+
+---
+
 ### All Advancements Overlay
 
 ![image](https://github.com/user-attachments/assets/39235014-4408-4b69-9c15-374bf65dd098)
@@ -113,7 +123,7 @@ Click "Preview Eye Throws Overlay". This will open a new window that displays a 
 **NOTE**: This overlay will show on OBS if your Ninjabrain Bot is in "All Advancements" mode (pictured below).
 ![image](https://github.com/user-attachments/assets/549a16a7-d974-4d92-a7d0-0851924fa1bc)
 
-Click "Preview All Advancements Overlay". This will open a new window that displays a dummy All Advancements tab. You can see how your layout might look like in OBS.
+Click "Preview All Advancements Overlay". This will open a new window that displays a dummy All Advancements tab. You can see how your layout might look like in OBS/Toolscreen.
 
 #### Columns
 - **Show column** - whether to show the column or not
