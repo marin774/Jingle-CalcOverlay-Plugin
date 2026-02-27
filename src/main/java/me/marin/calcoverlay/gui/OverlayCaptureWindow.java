@@ -35,6 +35,8 @@ public class OverlayCaptureWindow extends JFrame {
 
         setVisible(true);
 
+        setOpacity(0f);
+
         toBack();
     }
 
