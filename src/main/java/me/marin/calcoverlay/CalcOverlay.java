@@ -58,13 +58,14 @@ public class CalcOverlay {
         CALC_OVERLAY_FOLDER_PATH.toFile().mkdirs();
         createObsLinkStateFile();
         createObsScriptFile();
-        createOverlayFile();
 
         CalcOverlaySettings.load();
         VersionUtil.Version version = version(CalcOverlaySettings.getInstance().version);
         if (version.isOlderThan(CURRENT_VERSION)) {
             updateData(version);
         }
+
+        createOverlayFile();
 
         NINJABRAIN_BOT_EVENT_SUBSCRIBER.startConnectJob();
         NINJABRAIN_BOT_EVENT_SUBSCRIBER.updateClearOverlayTime();
