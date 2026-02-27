@@ -15,33 +15,68 @@ public class BlindCoordsGUI {
 
     @Getter
     private JPanel mainPanel;
-    private JPanel blindCorodsPanel;
+    private JPanel blindCoordsPanel;
 
-    public BlindCoordsGUI(int xNether, int zNether, String evaluation, double probability) {
+    public BlindCoordsGUI(int xNether, int zNether, String evaluation, double probability, String improveDirection, String improveDistance) {
         $$$setupUI$$$();
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 20, 5, 20);
+        gbc.anchor = GridBagConstraints.WEST;
 
         gbc.gridx = 0;
         gbc.gridy = 0;
 
+        JPanel topPanel = new JPanel(new GridBagLayout());
+
+        GridBagConstraints topGbc = new GridBagConstraints();
+        topGbc.anchor = GridBagConstraints.WEST;
+        topGbc.gridy = 0;
+        topGbc.gridx = 0;
+        topGbc.insets = new Insets(0, 0, 0, 0);
+
         JPanel coords = CalcOverlayUtil.setupCoordsLabel(xNether, zNether, true, CalcOverlaySettings.getInstance().netherCoordsColor, CalcOverlaySettings.getInstance().negativeCoords);
-        blindCorodsPanel.add(coords, gbc);
+        topPanel.add(coords, topGbc);
 
         JLabel probabilityLabel = CalcOverlayUtil.setupJLabel(String.format(Locale.US, "%.1f%%", probability * 100));
         probabilityLabel.setForeground(getColor(evaluation));
-        gbc.gridx += 1;
-        blindCorodsPanel.add(probabilityLabel, gbc);
+        topGbc.gridx = 1;
+        topGbc.insets = new Insets(0, 40, 0, 0);
+        topPanel.add(probabilityLabel, topGbc);
+
+        gbc.insets = new Insets(5, 20, 5, 20);
+        blindCoordsPanel.add(topPanel, gbc);
+
+        if (CalcOverlaySettings.getInstance().showDirectionAndDistance) {
+            Double dImproveDirection = CalcOverlayUtil.tryParse(improveDirection);
+            Double dImproveDistance = CalcOverlayUtil.tryParse(improveDistance);
+
+            if (dImproveDirection != null && dImproveDistance != null && getProbability(evaluation) < 0.9f) {
+                JLabel improveDirectionLabel = CalcOverlayUtil.setupJLabel(String.format("Head %d%s, %d blocks away.",
+                        (int) Math.round(Math.toDegrees(dImproveDirection)),
+                        CalcOverlayUtil.replaceUnsupportedChars("°"),
+                        (int) Math.round(dImproveDistance)));
+                gbc.gridy += 1;
+                gbc.gridx = 0;
+                blindCoordsPanel.add(improveDirectionLabel, gbc);
+            }
+        }
+
     }
 
     private Color getColor(String evaluation) {
-        float probability = 0;
         // there's no way to know the max probability of a < 400 blind in that ring
         // because the api sends the probability as a raw % and not in range of [0, 1] where 1 is max. probability for that ring+divine
         // (e.g. 10.2% for first ring without divine)
         // ... Which means the color can't be correct without knowing those values. (different divines/rings would mess it up)
         // Use evaluation to decide the color.
+        float probability = getProbability(evaluation);
+
+        return OverlayUtil.getColor(probability);
+    }
+
+    private float getProbability(String evaluation) {
+        float probability = 0;
+
         switch (evaluation) {
             case "EXCELLENT": {
                 probability = 1.0f;
@@ -68,8 +103,7 @@ public class BlindCoordsGUI {
                 break;
             }
         }
-
-        return OverlayUtil.getColor(probability);
+        return probability;
     }
 
     public static void main(String[] args) {
@@ -86,9 +120,9 @@ public class BlindCoordsGUI {
     private void $$$setupUI$$$() {
         mainPanel = new JPanel();
         mainPanel.setLayout(new GridLayoutManager(1, 1, new Insets(0, 0, 0, 0), -1, -1));
-        blindCorodsPanel = new JPanel();
-        blindCorodsPanel.setLayout(new GridBagLayout());
-        mainPanel.add(blindCorodsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        blindCoordsPanel = new JPanel();
+        blindCoordsPanel.setLayout(new GridBagLayout());
+        mainPanel.add(blindCoordsPanel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
     }
 
     /**

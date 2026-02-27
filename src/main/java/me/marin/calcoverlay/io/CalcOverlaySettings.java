@@ -28,6 +28,7 @@ public class CalcOverlaySettings {
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(Color.class, new ColorSerializer())
             .excludeFieldsWithoutExposeAnnotation()
+            .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .create();
 
@@ -76,7 +77,7 @@ public class CalcOverlaySettings {
     public boolean showAngleDirection;
 
     @Expose @SerializedName("angle display")
-    public AngleDisplay angleDisplay;
+    public AngleDisplay angleDisplay = AngleDisplay.ALL;
 
     @Expose @SerializedName("show coords based on dimension")
     public boolean onlyShowCurrentDimensionCoords;
@@ -92,7 +93,12 @@ public class CalcOverlaySettings {
 
     /* ********************************************************************* */
 
+    /******************** Blind Coords (blind endpoint) ***********************/
 
+    @Expose @SerializedName("show direction and distance to blind coords")
+    public boolean showDirectionAndDistance;
+
+    /* ********************************************************************* */
 
     /********** All Advancements (all-advancements endpoint) *****************/
 
@@ -151,6 +157,7 @@ public class CalcOverlaySettings {
         instance.displayOverlayMap.put(PreviewType.BLIND_COORDS, true);
         instance.angleDisplay = AngleDisplay.ALL;
         instance.showInfoBar = false;
+        instance.showDirectionAndDistance = false;
     }
 
     @AllArgsConstructor @Getter
@@ -354,7 +361,7 @@ public class CalcOverlaySettings {
         BLIND_COORDS;
 
         public boolean isEnabled() {
-            return CalcOverlaySettings.getInstance().displayOverlayMap.getOrDefault(this, false);
+            return CalcOverlaySettings.getInstance().displayOverlayMap.getOrDefault(this, true);
         }
     }
 
