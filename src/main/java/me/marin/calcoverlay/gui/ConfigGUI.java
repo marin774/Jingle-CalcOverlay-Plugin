@@ -169,14 +169,6 @@ public class ConfigGUI extends JPanel {
             settings.showInfoBar = showInfoBarCheckbox.isSelected();
             CalcOverlaySettings.save();
             updatePreview();
-
-            if (settings.showInfoBar) {
-                JOptionPane.showMessageDialog(null,
-                        "Number of adjustments is an **estimate** because\nNinjabrain Bot API doesn't provide the exact number of adjustments.\n\n" +
-                        "It should work correctly for all purposes (<20 adjustments),\njust be aware that it's not 100% perfect.\n\n" +
-                        "This will be fixed in Ninjabrain Bot v1.5.2+.",
-                        "CalcOverlay - Info Bar", JOptionPane.INFORMATION_MESSAGE);
-            }
         });
 
         enableWindowOverlayCheckbox.setSelected(settings.enableWindowOverlay);

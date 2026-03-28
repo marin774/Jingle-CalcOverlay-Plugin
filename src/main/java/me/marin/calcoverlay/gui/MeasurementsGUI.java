@@ -207,12 +207,7 @@ public class MeasurementsGUI {
 
             JLabel angleAdjustmentLabel;
 
-            int correctionIncrements = eyeThrows.get(0).getCorrectionIncrements();
-            if (correctionIncrements == 0) {
-                // Fix for pre-1.5.2 (correctionIncrements is always 0)
-                correctionIncrements = eyeThrows.get(eyeThrows.size() - 1).getAngleCorrectionIncrements(settings);
-            }
-
+            int correctionIncrements = eyeThrows.get(eyeThrows.size() - 1).getCorrectionIncrements();
             if (correctionIncrements != 0) {
                 angleAdjustmentLabel = setupJLabel(String.format(Locale.US, "%s%d",
                         correctionIncrements > 0 ? "+" : "",
